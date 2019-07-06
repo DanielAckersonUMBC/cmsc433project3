@@ -1,0 +1,24 @@
+body {
+    background-color: green;
+}
+
+h1 {
+    text-align: center;
+    font-family: cursive;
+    color: white;
+}
+
+.container {
+    position: relative;
+    display: block;
+    margin: auto;
+    padding: 20px;
+    background-color: rgb(209, 170, 111);
+    border: 2px solid rgb(128, 100, 57);
+    text-align: center;
+}
+
+.game {
+    display: inline-block;
+    background-color: black;
+}
