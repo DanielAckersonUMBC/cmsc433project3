@@ -10,7 +10,13 @@ class Wagon{ // Wagon class
 	constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels){
 		this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
 		this.settlers = settlers; // Array of Person classes
-		//ETC
+		// Other various items we need
+		this.oxenNum = oxenNum;
+		this.foodLbs = foodLbs;
+		this.clothesSet = clothesSet;
+		this.wheels = wheels;
+		this.tongues = tongues;
+		this.axels = axels;
 	}
 }
 
