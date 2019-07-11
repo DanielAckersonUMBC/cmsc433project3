@@ -54,43 +54,57 @@ function requestMaskedImage(image, mask) {
  *      rows
  *      cols
  * optional:
- *      spriteWidth
- *      spriteHeight
- *      xoff
- *      yoff
+ *      spriteWidth in pixels
+ *      spriteHeight in pixels
+ *      xoff in pixels
+ *      yoff in pixels
  */
 function UniformSpritesheet(options) {
     this.image = options.image;
     this.rows = options.rows;
     this.cols = options.cols;
 
-    ('spriteWidth' in options)?
-        this.spriteWidth = options.spriteWidth :
-        this.spriteWidth = parseInt(this.image.width / this.cols);
+    this.spriteWidth = ('spriteWidth' in options)?
+        options.spriteWidth :
+        parseInt(this.image.width / this.cols);
 
-    ('spriteHeight' in options)?
-        this.spriteHeight = options.spriteHeight :
-        this.spriteHeight = parseInt(this.image.height / this.rows);
+    this.spriteHeight = ('spriteHeight' in options)?
+        options.spriteHeight :
+        parseInt(this.image.height / this.rows);
 
-    ('xoff' in options)?
-        this.xoff = options.xoff :
-        this.xoff = 0;
+    this.xoff = ('xoff' in options)?  options.xoff : 0;
+    this.yoff = ('yoff' in options)?  options.yoff : 0;
 
-    ('yoff' in options)?
-        this.yoff = options.yoff :
-        this.yoff = 0;
-
+    /*
+     * draw sprite from this spritesheet
+     *
+     * required:
+     *      row
+     *      col
+     *      x (unit length: [0, 1], left to right)
+     *      y (unit length: [0, 1], top to bottom)
+     *      width (unit length, positive scalar)
+     *      height (unit length, positive scalar)
+     *      context
+     */
     this.drawSprite = function(options) {
+        let cvWidth = options.context.canvas.width;
+        let cvHeight = options.context.canvas.width;
+        let x = options.x * cvWidth;
+        let y = options.y * cvHeight;
+        let width = options.width * this.spriteWidth;
+        let height = options.height * this.spriteHeight;
+
         options.context.drawImage(
             this.image,
             options.col * this.spriteWidth + this.xoff,
             options.row * this.spriteHeight + this.yoff,
             this.spriteWidth,
             this.spriteHeight,
-            options.x,
-            options.y,
-            options.scale * this.spriteWidth,
-            options.scale * this.spriteHeight
+            x,
+            y,
+            width,
+            height
         );
     };
 }
@@ -112,11 +126,12 @@ function requestImage(url) {
  * OregonTrailGame object
  */
 function OregonTrailGame() {
-    let game = $('.game');
-    this.canvas = $('<canvas/>').width('100%').height('100%')[0];
-    this.canvas.width = game.width();
-    this.canvas.height = game.height();
-    this.context = this.canvas.getContext('2d');
+    let $game = $('.game');
+    let canvas = $('<canvas/>').width('100%').height('100%')[0];
+    canvas.width = $game.width();
+    canvas.height = $game.height();
+
+    this.context = canvas.getContext('2d');
     this.images = {};
 
     this.loadImages = (name_url_pairs) => {
@@ -133,7 +148,11 @@ function OregonTrailGame() {
         });
     };
 
-    $('.game').append(this.canvas);
+    this.clear = () => {
+        this.context.clearRect(0, 0, this.context.canvas.width, this.context.canvas.height);
+    }
+
+    $game.append(canvas);
 }
 
 
@@ -180,7 +199,7 @@ imageInfo = {
  */
 $(async () => {
     var game = new OregonTrailGame();
-    game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
+    game.clear();
     await game.loadImages(imageInfo);
 
     var people = new UniformSpritesheet({
@@ -191,9 +210,10 @@ $(async () => {
     people.drawSprite({
         row: 0,
         col: 2,
-        x: 10,
-        y: 10,
-        scale: 1,
+        x: 0.2,
+        y: 0.2,
+        width: 0.5,
+        height: 0.4,
         context: game.context,
     });
 });
