@@ -19,6 +19,9 @@ function setPixelRGBA(pixelData, x, y, width, height, pixel) {
 
 
 function maskImage(image, mask) {
+    if (!mask) {
+        return image;
+    }
     let canvas = $('<canvas/>').width(512).height(512)[0];
     canvas.width = image.width;
     canvas.height = image.height;
@@ -92,7 +95,7 @@ function UniformSpritesheet(options) {
 /*
  * returns a Promise. get result with 'await'
  */
-function loadImage(url) {
+function requestImage(url) {
     return new Promise(r => {
         let i = new Image();
         i.onload = (() => r(i));
@@ -110,22 +113,57 @@ function OregonTrailGame() {
     this.canvas.width = game.width();
     this.canvas.height = game.height();
     this.context = this.canvas.getContext('2d');
-    $('.game').append(this.canvas);
     this.images = {};
 
-    this.loadImages = async (name_url_pairs) => {
-        let deferred = {};
-        for (var name in name_url_pairs) {
-            deferred[name] = loadImage(name_url_pairs[name].url);
-        }
-        for (var name in deferred) {
-            this.images[name] = await deferred[name];
-            if (name_url_pairs[name].mask) {
-                this.images[name] = maskImage(this.images[name], name_url_pairs[name].mask);
+    this.loadImages = (name_url_pairs) => {
+        return new Promise(async resolve => {
+            let deferred = {};
+            for (var name in name_url_pairs) {
+                deferred[name] = requestImage(name_url_pairs[name].url);
             }
-        }
+            for (var name in deferred) {
+                this.images[name] = maskImage(await deferred[name], name_url_pairs[name].mask);
+            }
+            resolve(this);
+        });
     };
+
+    $('.game').append(this.canvas);
 }
+
+
+imageInfo = {
+    animals:      { url: 'sprites/Animals.png',
+                      mask: null },
+    event:        { url: 'sprites/Event.png',
+                      mask: null },
+    event2:       { url: 'sprites/Event2.png',
+                      mask: null },
+    eventsnow:    { url: 'sprites/EventSnow.png',
+                      mask: null },
+    eventsnow2:   { url: 'sprites/EventSnow2.png',
+                      mask: null },
+    hunting:      { url: 'sprites/Hunting.png',
+                      mask: null },
+    hunting2:     { url: 'sprites/Hunting2.png',
+                      mask: null },
+    huntingsnow:  { url: 'sprites/HuntingSnow.png',
+                      mask: null },
+    huntingsnow2: { url: 'sprites/HuntingSnow2.png',
+                      mask: null },
+    locations:    { url: 'sprites/Locations.png',
+                      mask: null },
+    oxen:         { url: 'sprites/Oxen.png',
+                      mask: null },
+    people:       { url: 'sprites/People.png',
+                      mask: [255, 0, 128] },
+    river:        { url: 'sprites/River.png',
+                      mask: null },
+    ot_locations: { url: 'sprites/ot_locations.gif',
+                      mask: null },
+    ot_misc:      { url: 'sprites/ot_misc.gif',
+                      mask: null },
+};
 
 
 /*
@@ -134,38 +172,7 @@ function OregonTrailGame() {
 $(async () => {
     var game = new OregonTrailGame();
     game.context.clearRect(0, 0, game.canvas.width, game.canvas.height);
-    await game.loadImages({
-        'animals':      { url: 'sprites/Animals.png',
-                          mask: null },
-        'event':        { url: 'sprites/Event.png',
-                          mask: null },
-        'event2':       { url: 'sprites/Event2.png',
-                          mask: null },
-        'eventsnow':    { url: 'sprites/EventSnow.png',
-                          mask: null },
-        'eventsnow2':   { url: 'sprites/EventSnow2.png',
-                          mask: null },
-        'hunting':      { url: 'sprites/Hunting.png',
-                          mask: null },
-        'hunting2':     { url: 'sprites/Hunting2.png',
-                          mask: null },
-        'huntingsnow':  { url: 'sprites/HuntingSnow.png',
-                          mask: null },
-        'huntingsnow2': { url: 'sprites/HuntingSnow2.png',
-                          mask: null },
-        'locations':    { url: 'sprites/Locations.png',
-                          mask: null },
-        'oxen':         { url: 'sprites/Oxen.png',
-                          mask: null },
-        'people':       { url: 'sprites/People.png',
-                          mask: [255, 0, 128] },
-        'river':        { url: 'sprites/River.png',
-                          mask: null },
-        'ot_locations': { url: 'sprites/ot_locations.gif',
-                          mask: null },
-        'ot_misc':      { url: 'sprites/ot_misc.gif',
-                          mask: null },
-    });
+    await game.loadImages(imageInfo);
 
     var people = new UniformSpritesheet({
         image: game.images['people'],
