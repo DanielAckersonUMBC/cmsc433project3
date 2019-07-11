@@ -18,28 +18,32 @@ function setPixelRGBA(pixelData, x, y, width, height, pixel) {
 }
 
 
-function maskImage(image, mask) {
-    if (!mask) {
-        return image;
-    }
-    let canvas = $('<canvas/>').width(512).height(512)[0];
-    canvas.width = image.width;
-    canvas.height = image.height;
-    let context = canvas.getContext('2d');
-    context.drawImage(image, 0, 0);
-    let imgData = context.getImageData(0, 0, image.width, image.height);
-    let pixelData = imgData.data;
-    for (var y = 0; y < image.height; y++) {
-        for (var x = 0; x < image.width; x++) {
-            let p = getPixelRGBA(pixelData, x, y, image.width, image.height);
-            if (p[0] == mask[0] && p[1] == mask[1] && p[2] == mask[2]) {
-                setPixelRGBA(pixelData, x, y, image.width, image.height, [0, 0, 0, 0]);
+function requestMaskedImage(image, mask) {
+    return new Promise(async resolve => {
+        if (!mask) {
+            resolve(image);
+            return;
+        }
+        let canvas = $('<canvas/>')[0];
+        canvas.width = image.width;
+        canvas.height = image.height;
+        let context = canvas.getContext('2d');
+        context.drawImage(image, 0, 0);
+        let imgData = context.getImageData(0, 0, image.width, image.height);
+        let pixelData = imgData.data;
+        for (var y = 0; y < image.height; y++) {
+            for (var x = 0; x < image.width; x++) {
+                let p = getPixelRGBA(pixelData, x, y, image.width, image.height);
+                if (p[0] == mask[0] && p[1] == mask[1] && p[2] == mask[2]) {
+                    setPixelRGBA(pixelData, x, y, image.width, image.height, [0, 0, 0, 0]);
+                }
             }
         }
-    }
-    context.putImageData(imgData, 0, 0);
-    let imageSrc = canvas.toDataURL('image/png');
-    return $('<image src="' + imageSrc +'"/>')[0];
+        context.putImageData(imgData, 0, 0);
+        let imageSrc = canvas.toDataURL('image/png');
+        let maskedImage = await requestImage(imageSrc);
+        resolve(maskedImage);
+    });
 }
 
 
@@ -122,7 +126,8 @@ function OregonTrailGame() {
                 deferred[name] = requestImage(name_url_pairs[name].url);
             }
             for (var name in deferred) {
-                this.images[name] = maskImage(await deferred[name], name_url_pairs[name].mask);
+                this.images[name] = await deferred[name], name_url_pairs[name].mask;
+                this.images[name] = await requestMaskedImage(this.images[name], name_url_pairs[name].mask);
             }
             resolve(this);
         });
@@ -163,6 +168,10 @@ imageInfo = {
                       mask: null },
     ot_misc:      { url: 'sprites/ot_misc.gif',
                       mask: null },
+    title_graphic:{ url: 'sprites/title_graphic.png',
+                      mask: null },
+    trail_title:  { url: 'sprites/trail_title.png',
+                      mask: null },
 };
 
 
@@ -175,7 +184,7 @@ $(async () => {
     await game.loadImages(imageInfo);
 
     var people = new UniformSpritesheet({
-        image: game.images['people'],
+        image: game.images.people,
         rows: 6,
         cols: 4,
     });
