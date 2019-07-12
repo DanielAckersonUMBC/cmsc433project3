@@ -1,5 +1,7 @@
 
-var on_highscore_page = 0; // just for screen navigation
+var menu_counter = 0; // just for screen navigation
+var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
+GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8 };
 var chosen_profession = ""; // can be used for gameplay implications 
 var leader_name = "";
 var TOP_TEN = 10;
@@ -7,6 +9,7 @@ var use_default_party_names = 1;
 var party_text_selector = 1;
 var party1 = ""; party2 = ""; party3 = ""; party4 = "";; // ONLY used if all 4 names are entered!
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
+var esc_pressed = 0;
 
 $( document ).ready(function() {
 
@@ -146,11 +149,30 @@ function addListeners(){
 	
 	document.body.onkeyup = function (e){
 		
-		if (e.keyCode === 32 && on_highscore_page){ // checks user presses space & is on title page.
+		if (e.keyCode === 32 && menu_counter == menu_enum.MAIN_MENU){ drawTitle(); }
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO2){ drawGameInfo3();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO3){ drawGameInfo4();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO4){ drawGameInfo5();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO5){ drawGameInfo6();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO6){ drawGameInfo7();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO7){ drawTitle();	}
 		
-			drawTitle();
+		else if (e.keyCode == 27){
 			
-		}
+          console.log(esc_pressed);
+          esc_pressed += 2;
+		  if (esc_pressed > 0){ 
+		   
+		    drawTitle(); 
+			
+			
+		  }
+		
+		} 
+		
+		else if (e.keyCode != 27) { esc_pressed -= 1; }
+		
 	}
 
 }
@@ -161,6 +183,7 @@ function drawTitle(){
 	var c = document.getElementById("myCanvas");
 	var ctx = c.getContext("2d");
 	ctx.clearRect(0,0,c.width,c.height);
+	esc_pressed = 0;
 
 	// Draws the title screen.	
 	var c = document.getElementById("myCanvas");
@@ -179,14 +202,14 @@ function drawTitle(){
 	ctx.fillText("5.  Choose Management Options", 107, 286); 
 	ctx.fillText("6.  End", 107, 305);
 	ctx.fillText("What is your choice?",80, 345);
-	ctx.drawImage(img, 12, 375);
+	ctx.drawImage(img, 12, 385);
 		  
 	// Bring the input box back.
 	document.getElementById("title").setAttribute("type","text");
 	document.getElementById("title").setAttribute("value","");			
 	document.getElementById("title").focus();
 
-	on_highscore_page = 0;
+	menu_counter = 0;
 	
 }
 
@@ -336,7 +359,7 @@ function drawStartMonth(){
 	
 }
 
-function verifyParty(){
+function drawVerifyParty(){
 	
 	clearCanvas();
     party_text_selector = 0;
@@ -363,6 +386,203 @@ function verifyParty(){
 	
 }
 
+function drawGameInfo1(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Try taking a journey by",110, 170);
+	ctx.fillText("covered wagon across 2000", 110, 190);
+	ctx.fillText("miles of plains, rivers, and", 110, 210);
+	ctx.fillText("mountains. Try! On the ", 110, 230);
+	ctx.fillText("plains, will you slosh your", 110, 250);
+	ctx.fillText("oxen through mud and", 110, 270); 
+	ctx.fillText("water-filled ruts or will you", 110, 290);
+	ctx.fillText("plod through dust six inches",110, 310);
+	ctx.fillText("deep?",110, 330);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO1;
+
+}
+
+function drawGameInfo2(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("How will you cross the rivers?",110, 170);
+	ctx.fillText("If you have money, you might", 110, 190);
+	ctx.fillText("take a ferry (if there is a", 110, 210);
+	ctx.fillText("ferry). Or, you can ford the", 110, 230);
+	ctx.fillText("river and hope you and your", 110, 250);
+	ctx.fillText("wagon aren't swallowed alive!", 110, 270); 
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO2;
+
+}
+
+function drawGameInfo3(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("What about supplies? Well, if", 110, 190);
+	ctx.fillText("you're low on food you can", 110, 210);
+	ctx.fillText("hunt. You might get a buffalo...", 110, 230);
+	ctx.fillText("you might.  And there are", 110, 250);
+	ctx.fillText("bear in the mountains.", 110, 270); 
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO3;
+
+}
+
+function drawGameInfo4(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("At the Dalles, you can try",110, 170);
+	ctx.fillText("navigating the Columbia river,", 110, 190);
+	ctx.fillText("but if running the rapids with", 110, 210);
+	ctx.fillText("a makeshift raft makes you", 110, 230);
+	ctx.fillText("queasy, better take the Barlow", 110, 250);
+	ctx.fillText("Road.", 110, 270); 
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO4;
+
+}
+
+function drawGameInfo5(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("If for some reason you don't",110, 170);
+	ctx.fillText("survive -- your wagon burns,", 110, 190);
+	ctx.fillText("or thieves steal your oxen, or", 110, 210);
+	ctx.fillText("you run out of provisions, or", 110, 230);
+	ctx.fillText("you die of cholera -- don't", 110, 250);
+	ctx.fillText("give up! Try again...and", 110, 270); 
+	ctx.fillText("again...until your name is up", 110, 290);
+	ctx.fillText("with the others on The Oregon",110, 310);
+	ctx.fillText("Top Ten.",110, 330);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO5;
+
+}
+
+function drawGameInfo6(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Esc key",250, 170);
+	ctx.fillText("You may want to quit in the", 110, 210);
+	ctx.fillText("middle of the program. If so,", 110, 230);
+	ctx.fillText("press the Escape (Esc) key", 110, 250);
+	ctx.fillText("twice whenever the computer is", 110, 270); 
+	ctx.fillText("waiting for a response.", 110, 290);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO6;
+
+}
+
+function drawGameInfo7(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	var img = document.getElementById("trail_title");
+	ctx.drawImage(img, 2.5, 10);
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("The software team responsible",110, 150);
+	ctx.fillText("for creation of this product includes:", 55, 170);
+	ctx.fillText("Ed Gratz", 265, 210);
+	ctx.fillText("Charolyn Kapplinger", 195, 230);
+	ctx.fillText("Mark Paquette", 230, 250);
+	ctx.fillText("Larry Phenow", 232, 270); 
+	ctx.fillText("Julie Redland", 230, 290);
+	ctx.fillText("(Adapted by Alex Whitehead, Daniel Ackerson",20, 330);
+	ctx.fillText("Chris Jimenez, and Dustin Cuocci)",70, 350);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.GAME_INFO7;
+
+}
+
 function handleTitle(val){ 
 
   if (val > 0 && val < 6 && val.length == 1){
@@ -375,7 +595,8 @@ function handleTitle(val){
   // No clue why, but this didn't work with
   // switch statements.
   if (val == 1){ drawProfPage(); }
-  else if (val == 3) { on_highscore_page = 1; drawHighScores(); }
+  else if (val == 2) { drawGameInfo1(); }
+  else if (val == 3) { menu_counter = 1; drawHighScores(); }
   
 }
 
@@ -432,7 +653,7 @@ function handleParty2(val){
 	  document.getElementById("party4").setAttribute("value",party3);
 	  party4 = DEFAULT_PARTY_NAMES[3];
 	  document.getElementById("party5").setAttribute("value",party4);
-	  verifyParty();	  
+	  drawVerifyParty();	  
 	  
   }    
 	
@@ -454,7 +675,7 @@ function handleParty3(val){
 	  document.getElementById("party4").setAttribute("value",party3);
 	  party4 = DEFAULT_PARTY_NAMES[3];
 	  document.getElementById("party5").setAttribute("value",party4);
-	  verifyParty();	
+	  drawVerifyParty();	
 	  
   }  
 	
@@ -474,7 +695,7 @@ function handleParty4(val){
 	  document.getElementById("party4").setAttribute("value",party3);
 	  party4 = DEFAULT_PARTY_NAMES[3];
 	  document.getElementById("party5").setAttribute("value",party4);
-	  verifyParty();	
+	  drawVerifyParty();	
 	  
   }   
 	
@@ -485,13 +706,13 @@ function handleParty5(val){
   if (val.length > 0){
 	  
     party4 = document.getElementById("party5").value;
-    verifyParty(); 
+    drawVerifyParty(); 
 	
   }  else {
 	  
 	  party4 = DEFAULT_PARTY_NAMES[3];
 	  document.getElementById("party5").setAttribute("value",party4);
-	  verifyParty();	
+	  drawVerifyParty();	
 	  
   }   
 	
