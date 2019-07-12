@@ -239,4 +239,21 @@ $(async () => {
         height: 0.4,
         context: game.context,
     });
+
+    /* Get user input and store for gameplay use
+
+        1. Banker, carpenter, or farmer
+            - determines scoring and starting money
+
+        2. Player name and 4 names for rest of party
+            - We hould use 4 predetermined names for now and worry
+              about custom names later
+
+        3. Start month
+            - March, April, May, June, July
+
+        4. Supplies
+            - oxen, food, clothing, ammo?, spare parts
+    /*
+
 });
