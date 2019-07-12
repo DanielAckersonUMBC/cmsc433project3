@@ -1,3 +1,26 @@
+class Person{ // Person class
+	constructor(name, health, healthIssue){
+	this.name = name;
+	this.health = health; // Good, Poor, Dead
+	this.healthIssue = healthIssue; // Specific issue, broken arm etc.
+	}
+}
+
+class Wagon{ // Wagon class
+	constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels){
+		this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
+		this.settlers = settlers; // Array of Person classes
+		// Other various items we need
+		this.oxenNum = oxenNum;
+		this.foodLbs = foodLbs;
+		this.clothesSet = clothesSet;
+		this.wheels = wheels;
+		this.tongues = tongues;
+		this.axels = axels;
+	}
+}
+
+
 function getPixelRGBA(pixelData, x, y, width, height) {
     let i = 4 * (x + y * width);
     return [
