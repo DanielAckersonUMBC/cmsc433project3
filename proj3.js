@@ -1,4 +1,4 @@
-class Person{ // Person class
+class Person{ // Person class: Contains the name, health status and current health issues
 	constructor(name, health, healthIssue){
 	this.name = name;
 	this.health = health; // Good, Poor, Dead
@@ -6,7 +6,7 @@ class Person{ // Person class
 	}
 }
 
-class Wagon{ // Wagon class
+class Wagon{ // Wagon class: Contains the starting type, settler array and item numbers
 	constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels){
 		this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
 		this.settlers = settlers; // Array of Person classes

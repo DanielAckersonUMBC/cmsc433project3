@@ -73,7 +73,10 @@ function addListeners(){
 }
 
 function handle_title(val){ 
-
+  // Start the Game
+  if (val == 1){
+	  window.location.replace("proj3.html");
+  }
   // Navigate to high score page.
   if (val == 3){
   
