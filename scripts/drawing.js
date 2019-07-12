@@ -1,7 +1,6 @@
-
 var menu_counter = 0; // just for screen navigation
 var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
-GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8 };
+GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11 };
 var chosen_profession = ""; // can be used for gameplay implications 
 var leader_name = "";
 var TOP_TEN = 10;
@@ -10,6 +9,19 @@ var party_text_selector = 1;
 var party1 = ""; party2 = ""; party3 = ""; party4 = "";; // ONLY used if all 4 names are entered!
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
 var esc_pressed = 0;
+
+function init(){
+	
+	var menu_counter = 0; // just for screen navigation
+	var chosen_profession = ""; // can be used for gameplay implications 
+	var leader_name = "";
+	var TOP_TEN = 10;
+	var use_default_party_names = 1;
+	var party_text_selector = 1;
+	var party1 = ""; party2 = ""; party3 = ""; party4 = "";; // ONLY used if all 4 names are entered!
+	var esc_pressed = 0;
+
+}
 
 $( document ).ready(function() {
 
@@ -147,37 +159,57 @@ function addListeners(){
 	  
 	}	
 	
+	var explain_points = document.getElementById("explain_points");
+	if (explain_points != null){
+		
+	  	  explain_points.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleExplainPoints(explain_points.value);
+		  }
+		  
+	  });	
+	
+	  document.getElementById("explain_points").style.top = "502px";
+	  document.getElementById("explain_points").style.left = "815px";
+	  explain_points.addEventListener("focusout", explainPointsFocus);		
+		
+	}
+	
 	document.body.onkeyup = function (e){
 		
-		if (e.keyCode === 32 && menu_counter == menu_enum.MAIN_MENU){ drawTitle(); }
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
+		if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO2){ drawGameInfo3();	}
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO3){ drawGameInfo4();	}
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO4){ drawGameInfo5();	}
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO5){ drawGameInfo6();	}
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO6){ drawGameInfo7();	}
 		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO7){ drawTitle();	}
+		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS1) { drawExplainPoints2(); }
+		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS2){ drawExplainPoints3(); }
+		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS3) { drawTitle(); }
 		
 		else if (e.keyCode == 27){
 			
           console.log(esc_pressed);
-          esc_pressed += 2;
-		  if (esc_pressed > 0){ 
+          esc_pressed += 1;
+		  if (esc_pressed > 1){ 
 		   
-		    drawTitle(); 
-			
+		    hideTextBoxes();
+		    drawTitle(); 			
 			
 		  }
 		
 		} 
 		
-		else if (e.keyCode != 27) { esc_pressed -= 1; }
+		else if (e.keyCode != 27) { esc_pressed = 0; }
 		
 	}
 
 }
 
 function drawTitle(){
+	
+	init();
 	
 	// Clear out the canvas.
 	var c = document.getElementById("myCanvas");
@@ -226,7 +258,21 @@ function drawHighScores(){
 		// Draws the highscore screen.
 		var c = document.getElementById("myCanvas");
 		var ctx = c.getContext("2d");	
-		ctx.font = "18px AppleII";
+		ctx.lineWidth = "6";
+		ctx.beginPath();
+		ctx.moveTo(30, 15);
+		ctx.lineTo(605, 15);
+		ctx.strokeStyle = "#07e896";
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(30, 70);
+		ctx.lineTo(605, 70);
+		ctx.stroke();
+		ctx.beginPath();		
+		ctx.strokeStyle = "white";
+		ctx.rect(100, 375, 390, 75); 
+		ctx.stroke();
+		ctx.font = "16px AppleII";
 		ctx.fillStyle = "white";
 		ctx.fillText("The Oregon Top Ten", 165, 50);
 		ctx.fillText("Name", 75, 130);
@@ -234,7 +280,7 @@ function drawHighScores(){
 		ctx.fillText("Rating", 430, 130);
 		
 		// Draw the results of the high score query.
-		var n_x = 10; var p_x = 265; var r_x = 400;
+		var n_x = 20; var p_x = 270; var r_x = 420;
 		var y = 160;
 		for (i = 0; i < TOP_TEN; i++){
 
@@ -246,7 +292,12 @@ function drawHighScores(){
 		
 		}
 		
-		ctx.fillText("Press SPACE BAR to return", 120, 410);
+		ctx.fillText("Would you like to see how", 120, 410);
+		ctx.fillText("points are earned?", 120, 430);
+		
+		document.getElementById("explain_points").setAttribute("type","text");
+		document.getElementById("explain_points").setAttribute("value","");			
+		document.getElementById("explain_points").focus();
 		
 	  }
 	};
@@ -583,6 +634,153 @@ function drawGameInfo7(){
 
 }
 
+function drawExplainPoints1(){
+
+		clearCanvas();
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");	
+		ctx.lineWidth = "6";
+		ctx.beginPath();
+		ctx.moveTo(30, 15);
+		ctx.lineTo(605, 15);
+		ctx.strokeStyle = "#07e896";
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(30, 70);
+		ctx.lineTo(605, 70);
+		ctx.stroke();
+		ctx.font = "16px AppleII";
+		ctx.fillStyle = "white";
+		ctx.fillText("On Arriving in Oregon", 175, 50);
+		ctx.fillText("Your most important resource is the", 65, 130);
+		ctx.fillText("people you have with you. You", 65, 150);
+		ctx.fillText("receive points for each member of", 65, 170);
+		ctx.fillText("your party who arrives safely; you", 65, 190);
+		ctx.fillText("receive more points if they arrive", 65, 210);
+		ctx.fillText("in good health!", 65, 230);
+		ctx.fillText("good", 130, 340);
+		ctx.fillText("fair", 130, 360);
+		ctx.fillText("poor", 130, 380);
+		ctx.fillText("very poor", 130, 400);
+		ctx.fillText("500", 420, 340);
+		ctx.fillText("400", 420, 360);
+		ctx.fillText("300", 420, 380);
+		ctx.fillText("200", 420, 400);
+		ctx.fillText("Press SPACE BAR to continue",125, 460);
+		
+		// Rectangles with text in them.
+		ctx.beginPath();		
+		ctx.fillStyle = "white";
+		ctx.fillRect(90, 250, 200, 70); 
+		ctx.stroke();
+
+		ctx.beginPath();		
+		ctx.fillStyle = "white";
+		ctx.fillRect(340, 250, 200, 70); 
+		ctx.stroke();
+		
+		ctx.fillStyle = "black";
+		ctx.fillText("Health of", 130, 280);
+		ctx.fillText("Party", 155, 300);
+		ctx.fillText("Points per", 365, 280);
+		ctx.fillText("Person", 405, 300);		
+		
+		menu_counter = menu_enum.EXP_POINTS1;
+		
+}
+
+function drawExplainPoints2(){
+
+		clearCanvas();
+
+		var c = document.getElementById("myCanvas");
+		var ctx = c.getContext("2d");	
+		ctx.lineWidth = "6";
+		ctx.beginPath();
+		ctx.moveTo(30, 15);
+		ctx.lineTo(605, 15);
+		ctx.strokeStyle = "#07e896";
+		ctx.stroke();
+		ctx.beginPath();
+		ctx.moveTo(30, 70);
+		ctx.lineTo(605, 70);
+		ctx.stroke();
+		ctx.font = "16px AppleII";
+		ctx.fillStyle = "white";
+		ctx.fillText("On Arriving in Oregon", 175, 50);
+		ctx.fillText("The resources you arrive with will", 65, 130);
+		ctx.fillText("help you get started in the new", 65, 150);
+		ctx.fillText("land. You receive points for each", 65, 170);
+		ctx.fillText("item you bring safely to Oregon.", 65, 190);
+
+		ctx.fillText("wagon", 110, 290);
+		ctx.fillText("ox", 110, 310);
+		ctx.fillText("spare wagon part", 110, 330);
+		ctx.fillText("set of clothing", 110, 350);
+		ctx.fillText("worms (each 50)", 110, 370);
+		ctx.fillText("food (each 25 pounds)", 110, 390);		
+		ctx.fillText("cash (each 5 dollars)", 110, 410);
+
+		ctx.fillText("50", 420, 290);
+		ctx.fillText("4", 433, 310);
+		ctx.fillText("2", 433, 330);
+		ctx.fillText("2", 433, 350);
+		ctx.fillText("1", 433, 370);
+		ctx.fillText("1", 433, 390);		
+		ctx.fillText("1", 433, 410);
+
+		ctx.fillText("Press SPACE BAR to continue",125, 460);
+		
+		// Rectangles with text in them.
+		ctx.beginPath();		
+		ctx.fillStyle = "white";
+		ctx.fillRect(90, 200, 200, 70); 
+		ctx.stroke();
+
+		ctx.beginPath();		
+		ctx.fillStyle = "white";
+		ctx.fillRect(340, 200, 200, 70); 
+		ctx.stroke();
+		
+		ctx.fillStyle = "black";
+		ctx.fillText("Resources of", 105, 230);
+		ctx.fillText("Party", 160, 250);
+		ctx.fillText("Points per", 365, 230);
+		ctx.fillText("Item", 405, 250);		
+		
+		menu_counter = menu_enum.EXP_POINTS2;
+		
+}
+
+function drawExplainPoints3(){
+
+    clearCanvas();
+	hideTextBoxes();
+
+	// Draws the title screen.	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 70);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("On Arriving in Oregon", 175, 50);
+	ctx.fillText("You receive points for your",110, 170);
+	ctx.fillText("occupation in the new land.", 110, 190);
+	ctx.fillText("Because more farmers and", 110, 210);
+	ctx.fillText("carpenters were needed than", 110, 230);
+	ctx.fillText("bankers, you receive double", 110, 250);
+	ctx.fillText("points upon arriving in Oregon", 110, 270); 
+	ctx.fillText("as a carpenter, and triple", 110, 290);
+	ctx.fillText("points for arriving as a farmer.",110, 310);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	ctx.drawImage(img, 12, 385);
+		  
+	menu_counter = menu_enum.EXP_POINTS3;
+
+}
+
 function handleTitle(val){ 
 
   if (val > 0 && val < 6 && val.length == 1){
@@ -742,6 +940,27 @@ function handlePartyCorrect(val){
 	
 }
 
+function handleExplainPoints(val){
+	
+	if(val.length > 0){
+		
+		if (val == "Y" || val == "y"){
+			
+			hideTextBoxes();
+			drawExplainPoints1();
+			
+		}
+		else if (val == "N" || val == "n"){		 
+			
+			hideTextBoxes();
+			drawTitle();
+		
+		}			
+		
+	}
+	
+}
+
 // Small Utility Functions
 function hideTextBoxes(){ 
 
@@ -763,7 +982,8 @@ function hideTextBoxes(){
 	document.getElementById("party5").setAttribute("autofocus","");
 	document.getElementById("party_correct").setAttribute("type","hidden");
 	document.getElementById("party_correct").setAttribute("autofocus","");
-	
+	document.getElementById("explain_points").setAttribute("type","hidden");
+	document.getElementById("explain_points").setAttribute("autofocus","");
 }
 
 function showPartyTextBoxes(){
@@ -797,6 +1017,7 @@ function titleFocus(){ document.getElementById("title").focus(); }
 function profFocus(){ document.getElementById("prof").focus(); }
 function leaderFocus(){ document.getElementById("leader").focus(); }
 function partyCorrectFocus() { document.getElementById("party_correct").focus(); }
+function explainPointsFocus() { document.getElementById("explain_points").focus(); }
 
 function enableParty(){
 
