@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Rye&display=swap');
+
 
 body {
     background-color: green;
@@ -21,27 +21,91 @@ h1 {
 }
 
 .game {
+
     display: inline-block;
     background-color: black;
     width: 640px;
     height: 480px;
+
+}
+
+canvas{
+	
+	display: inline;
+	background-color: black;
+	
+	
+}
+
+#canvas-container{
+
+  text-align:center;
+  width: 100%;
+  height: 480px;
+  margin: auto;
+  background-color: tan;
+  
 }
 
 .highscore {
 
     display: inline-block;
     background-color: black;
-    font-family: 'Rye', cursive;
-    font-size: 40px;
+    font-family: AppleII;
+    font-size: 16px;
     width: 640px;
     height: 480px;
     color: white;
+
     
 }
 
 .highscore_table{
 
-    font-family: 'Rye', cursive;
-    font-size: 20px;
+    font-family: AppleII;
+    font-size: 14px;
     color: white;
+}
+
+.title_text{
+	
+	font-family: AppleII;
+    font-size: 14px;
+    color: white;
+	width: 640px;
+	text-align: left;
+	text-indent: 80px;
+}
+
+.title_menu{
+	
+	font-family: AppleII;
+    font-size: 14px;
+    color: white;
+	width: 640px;
+	text-align: left;
+	text-indent: 120px;
+}
+
+input[type=text]{
+
+  background-color: black;
+  color: white;
+  font-family: AppleII;
+  font-size: 16px;
+  width: 14px;
+  height: 16px;
+  border-color: black;
+  outline: none;
+  position:absolute;
+  left:805px;
+  top:416px;
+	
+}
+
+@font-face{
+	
+	font-family: AppleII;
+	src: url(PrintChar21.ttf);
+	
 }
