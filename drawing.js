@@ -1,5 +1,6 @@
 
 var on_highscore_page = 0;
+var chosen_profession = "";
 var TOP_TEN = 10;
 
 function drawTitle(){
@@ -40,26 +41,48 @@ function drawTitle(){
 function addListeners(){
 
 	var title = document.getElementById("title");
-	title = document.getElementById("title");
 	if(title != null){
 	
 	  //alert('listening');
 	  title.addEventListener("keydown", function (e) {
 		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
 			  handle_title(title.value);
-		  }
-	  });
-	  
-	  	  title.addEventListener("keydown", function (e) {
-		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
-			  handle_title(title.value);
+
 		  }
 	  });
 	  
 	  title.addEventListener("focusout", titleFocus);
 	  
-	}	
-
+	}
+	
+	var profession = document.getElementById("prof");
+	if (profession != null){
+		
+	  	  profession.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handle_prof(profession.value);
+		  }
+	  });	
+	
+	  profession.addEventListener("focusout", profFocus);
+	  
+	}
+	
+	var leader = document.getElementById("leader");
+	if (leader != null){
+		
+	  	  leader.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleLeader(profession.value);
+		  }
+	  });	
+	
+	  document.getElementById("leader").style.top = "371px";
+	  document.getElementById("leader").style.left = "702px";
+	  document.getElementById("leader").style.width = "300px";
+	  leader.addEventListener("focusout", leaderFocus);
+	  
+	}
 	
 	document.body.onkeyup = function (e){
 		
@@ -72,25 +95,7 @@ function addListeners(){
 
 }
 
-function handle_title(val){ 
-  // Start the Game
-  if (val == 1){
-	  window.location.replace("proj3.html");
-  }
-  // Navigate to high score page.
-  if (val == 3){
-  
-    on_highscore_page = 1;
-	var json;
-	
-    // Get rid of the input box.
-	document.getElementById("title").setAttribute("type","hidden");
-	document.getElementById("title").setAttribute("autofocus","");
-	
-	// Clear out the canvas.
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.clearRect(0,0,c.width,c.height);
+function drawHighScores(){
 	
 	// Sent a request to the high scores php file.
 	var xmlhttp = new XMLHttpRequest();
@@ -129,13 +134,114 @@ function handle_title(val){
 	};
 	xmlhttp.open("GET", "highscores_working.php", true);
 	xmlhttp.send();
-		
-  }
 	
 }
 
-function titleFocus(){
+function drawProfPage(){
+			
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Many kinds of people made the",80,100);
+	ctx.fillText("trip to Oregon.",80,120);
+	ctx.fillText("You may:",80, 170);
+	ctx.fillText("1.  Be a banker from Boston", 107, 210);
+	ctx.fillText("2.  Be a carpenter from Ohio", 107, 229);
+	ctx.fillText("3.  Be a farmer from Illinois", 107, 248);
+	ctx.fillText("4.  Find out the differences", 107, 267);
+	ctx.fillText("    between these choices", 107, 286); 
+	ctx.fillText("What is your choice?",80, 345);
+	ctx.drawImage(img, 12, 375);
+	  	  
+	// Bring the input box back.
+	document.getElementById("prof").setAttribute("type","text");
+	document.getElementById("prof").setAttribute("value","");			
+	document.getElementById("prof").focus();
+		
+}
+
+function drawLeaderName(){
 	
-	document.getElementById("title").focus();
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	img = document.getElementById("misc");
+	ctx.drawImage(img, 100, 170, 160, 105, 30, 50, 250, 200);
+	img = document.getElementById("family");
+	ctx.drawImage(img, 400, 100, 170, 150);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("What is the first name of the",80,280);
+	ctx.fillText("wagon leader?",80,300);
+	
+	// Bring the input box back.
+	document.getElementById("leader").setAttribute("type","text");
+	document.getElementById("leader").setAttribute("value","");			
+	document.getElementById("leader").focus();	
 	
 }
+
+function handle_title(val){ 
+
+  if (val > 0 && val < 6){
+	  
+	hideTextBoxes();
+	clearCanvas();
+	
+  }  else { return; }
+  
+  // No clue why, but this didn't work with
+  // switch statements.
+  if (val == 1){ drawProfPage(); }
+  else if (val == 3) { on_highscore_page = 1; drawHighScores(); }
+  
+}
+
+function handle_prof(val){
+	
+  if (val > 0 && val < 5){
+	  
+	hideTextBoxes();
+	clearCanvas();
+	
+  }  else { return; }
+  
+  
+  
+  if (val > 0 && val < 4){ 
+  
+    if (val == 1){ chosen_profession = "banker"; }
+	else if (val == 2){ chosen_profession = "carpenter"; }
+	else { chosen_profession = "farmer"; }
+    drawLeaderName(); 
+	
+  }
+  else if (val == 4){ }
+	
+}
+
+function handleLeader(){}
+
+// Small Utility Functions
+function hideTextBoxes(){ 
+
+	document.getElementById("title").setAttribute("type","hidden");
+	document.getElementById("title").setAttribute("autofocus","");
+	document.getElementById("prof").setAttribute("type","hidden");
+	document.getElementById("prof").setAttribute("autofocus","");
+	
+}
+
+function clearCanvas(){
+	
+	var c = document.getElementById("myCanvas");
+	var ctx = c.getContext("2d");
+	ctx.clearRect(0,0,c.width,c.height);
+	
+}
+
+function titleFocus(){ document.getElementById("title").focus(); }
+function profFocus(){ document.getElementById("prof").focus(); }
+function leaderFocus(){ document.getElementById("leader").focus(); }
