@@ -115,8 +115,9 @@ function UniformSpritesheet(options) {
         let cvHeight = options.context.canvas.width;
         let x = options.x * cvWidth;
         let y = options.y * cvHeight;
-        let width = options.width * this.spriteWidth;
-        let height = options.height * this.spriteHeight;
+        let width = options.width * cvWidth;
+        let height = options.height * cvHeight;
+        console.log(x,y,cvWidth,cvHeight, )
 
         options.context.drawImage(
             this.image,
@@ -180,32 +181,6 @@ function OregonTrailGame() {
 
 
 imageInfo = {
-    animals:      { url: 'sprites/Animals.png',
-                      mask: null },
-    event:        { url: 'sprites/Event.png',
-                      mask: null },
-    event2:       { url: 'sprites/Event2.png',
-                      mask: null },
-    eventsnow:    { url: 'sprites/EventSnow.png',
-                      mask: null },
-    eventsnow2:   { url: 'sprites/EventSnow2.png',
-                      mask: null },
-    hunting:      { url: 'sprites/Hunting.png',
-                      mask: null },
-    hunting2:     { url: 'sprites/Hunting2.png',
-                      mask: null },
-    huntingsnow:  { url: 'sprites/HuntingSnow.png',
-                      mask: null },
-    huntingsnow2: { url: 'sprites/HuntingSnow2.png',
-                      mask: null },
-    locations:    { url: 'sprites/Locations.png',
-                      mask: null },
-    oxen:         { url: 'sprites/Oxen.png',
-                      mask: null },
-    people:       { url: 'sprites/People.png',
-                      mask: [255, 0, 128] },
-    river:        { url: 'sprites/River.png',
-                      mask: null },
     ot_locations: { url: 'sprites/ot_locations.gif',
                       mask: null },
     ot_misc:      { url: 'sprites/ot_misc.gif',
@@ -225,18 +200,21 @@ $(async () => {
     game.clear();
     await game.loadImages(imageInfo);
 
-    var people = new UniformSpritesheet({
-        image: game.images.people,
-        rows: 6,
-        cols: 4,
+    console.log('create sheet')
+    var oxen = new UniformSpritesheet({
+        image: game.images.ot_misc,
+        rows: 4,
+        cols: 1,
+        spriteWidth: 97,
+        spriteHeight: 29,
     });
-    people.drawSprite({
+    oxen.drawSprite({
         row: 0,
-        col: 2,
+        col: 0,
         x: 0.2,
         y: 0.2,
-        width: 0.5,
-        height: 0.4,
+        width: 0.3,
+        height: 0.1,
         context: game.context,
     });
 
