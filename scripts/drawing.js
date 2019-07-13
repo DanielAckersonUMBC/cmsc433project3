@@ -1,7 +1,7 @@
 var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
 GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11,
 EXP_PROF: 12, EXP_MONTH: 13, SUPPLY_MSG: 14, MATT_MSG: 15, MATT_WELCOME: 16, MATT_WELCOME2: 17,
-MATT_STOREFRONT: 18 };
+MATT_STOREFRONT: 18, MATT_GOODBYE: 19 };
 var TOP_TEN = 10;
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
 var MONTHS = ["", "March", "April", "May", "June", "July"];
@@ -242,6 +242,11 @@ function addListeners(){
 		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
 			  handleMatt(matt.value);
 		  }
+		  else if (e.keyCode == 32) {
+
+			  drawMattGoodbye();
+			
+		  }
 	  });	
 	  document.getElementById("matt_text").style.top = "422px";
 	  document.getElementById("matt_text").style.left = "855px";
@@ -309,24 +314,56 @@ function addListeners(){
 	  
 	}
 	
-	var matt_parts = document.getElementById("matt_parts");
-	if (matt_parts != null){
+	var matt_wheels = document.getElementById("matt_wheels");
+	if (matt_wheels != null){
 		
-	  	  matt_parts.addEventListener("keydown", function (e) {
+	  	  matt_wheels.addEventListener("keydown", function (e) {
 		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
-			  handleMattParts(matt_parts.value);
+			  handleMattWheels(matt_wheels.value);
 		  }
 	  });	
-	  document.getElementById("matt_parts").style.top = "422px";
-	  document.getElementById("matt_parts").style.left = "855px";
-	  document.getElementById("matt_parts").style.width = "300px";
-	  matt_parts.addEventListener("focusout", mattPartsFocus);
+	  document.getElementById("matt_wheels").style.top = "392px";
+	  document.getElementById("matt_wheels").style.left = "946px";
+	  document.getElementById("matt_wheels").style.width = "100px";
+	  matt_wheels.addEventListener("focusout", mattWheelsFocus);
+	  
+	}
+	
+	var matt_axles = document.getElementById("matt_axles");
+	if (matt_axles != null){
+		
+	  	  matt_axles.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattAxles(matt_axles.value);
+		  }
+	  });	
+	  document.getElementById("matt_axles").style.top = "392px";
+	  document.getElementById("matt_axles").style.left = "940px";
+	  document.getElementById("matt_axles").style.width = "100px";
+	  matt_axles.addEventListener("focusout", mattAxlesFocus);
+	  
+	}
+	
+	var matt_tongues = document.getElementById("matt_tongues");
+	if (matt_tongues != null){
+		
+	  	  matt_tongues.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattTongues(matt_tongues.value);
+		  }
+	  });	
+	  document.getElementById("matt_tongues").style.top = "392px";
+	  document.getElementById("matt_tongues").style.left = "964px";
+	  document.getElementById("matt_tongues").style.width = "100px";
+	  matt_tongues.addEventListener("focusout", mattTonguesFocus);
 	  
 	}
 
 	
 	document.body.onkeyup = function (e){
 		
+		// This is to keep track of which screen the player is on when the space bar
+		// or enter key is pressed. Each one has a different for the next screen.
 		if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO2){ drawGameInfo3();	}
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO3){ drawGameInfo4();	}
@@ -343,7 +380,9 @@ function addListeners(){
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_MSG) { drawMattWelcome(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME) { drawMattWelcome2(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME2) { drawMattStorefront(); }
+		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.MATT_GOODBYE){ drawIndependence(); }
 		
+		// Handles the double escape to quit functionality.
 		else if (e.keyCode == 27){
 			
           console.log(game_data.esc_pressed);
@@ -1462,6 +1501,303 @@ function drawMattWormInvalid(){
 
 }
 
+function drawMattWagonWheels(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon wheels?",200, 322);
+
+	
+	document.getElementById("matt_wheels").setAttribute("type","text");
+	document.getElementById("matt_wheels").setAttribute("value","");
+	document.getElementById("matt_wheels").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattWagonWheelsInvalid(){
+	
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon wheels?",200, 322);
+
+	
+	document.getElementById("matt_wheels").setAttribute("type","text");
+	document.getElementById("matt_wheels").setAttribute("value","");
+	document.getElementById("matt_wheels").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattWagonAxles(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon axles?",200, 322);
+
+	
+	document.getElementById("matt_axles").setAttribute("type","text");
+	document.getElementById("matt_axles").setAttribute("value","");
+	document.getElementById("matt_axles").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);	
+
+}
+
+function drawMattWagonAxlesInvalid(){
+	
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon axles?",200, 322);
+
+	document.getElementById("matt_axles").setAttribute("type","text");
+	document.getElementById("matt_axles").setAttribute("value","");
+	document.getElementById("matt_axles").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);	
+	
+}
+
+function drawMattWagonTongues(){
+	
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon tongues?",200, 322);
+
+	
+	document.getElementById("matt_tongues").setAttribute("type","text");
+	document.getElementById("matt_tongues").setAttribute("value","");
+	document.getElementById("matt_tongues").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);	
+	
+}
+
+function drawMattWagonTonguesInvalid(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_parts_img");
+	ctx.drawImage(img, 320, 340, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("It's a good idea to have a",200, 162);
+	ctx.fillText("few spare parts for your",200, 182);
+	ctx.fillText("wagon. Here are the prices:",200, 202);
+	
+	ctx.fillText("wagon wheel - $10 each",220, 242);
+	ctx.fillText("wagon wheel - $10 each",220, 262);
+	ctx.fillText("wagon wheel - $10 each",220, 282);
+
+	ctx.fillText("How many wagon tongues?",200, 322);
+
+	
+	document.getElementById("matt_tongues").setAttribute("type","text");
+	document.getElementById("matt_tongues").setAttribute("value","");
+	document.getElementById("matt_tongues").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattGoodbye(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+		
+	ctx.fillText("Well then, you're ready",200, 200);
+	ctx.fillText("to start. Good luck!",200, 220);
+	ctx.fillText("you have a long and",200, 240);
+	ctx.fillText("difficult journey ahead",200, 260);
+	ctx.fillText("of you.",200, 280);
+	
+	ctx.fillText("Press ENTER to continue",200, 460);
+    game_data.menu_counter = menu_enum.MATT_GOODBYE;
+	
+}
+
+function drawIndependence(){
+
+	clearCanvas();
+	hideTextBoxes();
+	
+}
+
 function handleTitle(val){ 
 
   if (val > 0 && val < 6 && val.length == 1){
@@ -1668,7 +2004,7 @@ function handleMatt(val){
 		else if (val == 2) { drawMattFood(); }
 		else if (val == 3) { drawMattClothing(); }
 		else if (val == 4) { drawMattWorm(); }
-		else if (val == 5) { drawMattParts(); }
+		else if (val == 5) { drawMattWagonWheels(); }
 		
 	} else { return; }
 	
@@ -1769,6 +2105,78 @@ function handleMattWorms(val){
 	
 }
 
+function handleMattWheels(val){
+
+  if (val.length > 0){
+	 
+	// 10 per
+	var wheels = val * 10;
+	  
+	// $40 per yoke
+    if (wheels <= game_data.current_money){ 
+
+	  game_data.current_money -= wheels; 
+	  matt_bill.total += wheels;
+	  matt_bill.parts_amt += wheels;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.worm_amt.toFixed(2);
+	  game_data.num_wagon_wheels += val;
+	  drawMattWagonAxles();
+	} else { drawMattWagonWheelsInvalid(); }
+
+  }
+	
+}
+
+function handleMattAxles(val){
+
+  if (val.length > 0){
+	 
+	// 10 per
+	var axles = val * 10;
+	  
+	// $40 per yoke
+    if (axles <= game_data.current_money){ 
+
+	  game_data.current_money -= axles; 
+	  matt_bill.total += axles;
+	  matt_bill.parts_amt += axles;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.worm_amt.toFixed(2);
+	  game_data.num_wagon_axles += val;
+	  drawMattWagonTongues();
+	} else { drawMattWagonAxlesInvalid(); }
+
+  }
+	
+}
+
+function handleMattTongues(val){
+
+  if (val.length > 0){
+	 
+	// 10 per
+	var tongues = val * 10;
+	  
+	// $40 per yoke
+    if (tongues <= game_data.current_money){ 
+
+	  game_data.current_money -= tongues; 
+	  matt_bill.total += tongues;
+	  matt_bill.parts_amt += tongues;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.worm_amt.toFixed(2);
+	  game_data.num_wagon_tongues += val;
+	  drawMattStorefront();
+	} else { drawMattWagonTonguesInvalid(); }
+
+  }
+	
+}
+
 // Small Utility Functions
 function hideTextBoxes(){ 
 
@@ -1804,8 +2212,12 @@ function hideTextBoxes(){
 	document.getElementById("matt_clothing").setAttribute("autofocus","");
 	document.getElementById("matt_worms").setAttribute("type","hidden");
 	document.getElementById("matt_worms").setAttribute("autofocus","");
-	document.getElementById("matt_parts").setAttribute("type","hidden");
-	document.getElementById("matt_parts").setAttribute("autofocus","");
+	document.getElementById("matt_wheels").setAttribute("type","hidden");
+	document.getElementById("matt_wheels").setAttribute("autofocus","");
+	document.getElementById("matt_axles").setAttribute("type","hidden");
+	document.getElementById("matt_axles").setAttribute("autofocus","");
+	document.getElementById("matt_tongues").setAttribute("type","hidden");
+	document.getElementById("matt_tongues").setAttribute("autofocus","");
 	
 }
 
@@ -1840,7 +2252,10 @@ function mattOxenFocus() { document.getElementById("matt_oxen").focus(); }
 function mattFoodFocus() { document.getElementById("matt_food").focus(); }
 function mattClothingFocus() { document.getElementById("matt_clothing").focus(); }
 function mattWormsFocus() { document.getElementById("matt_worms").focus(); }
-function mattPartsFocus() { document.getElementById("matt_parts").focus(); }
+function mattWheelsFocus() { document.getElementById("matt_wheels").focus(); }
+function mattAxlesFocus() { document.getElementById("matt_axles").focus(); }
+function mattTonguesFocus() { document.getElementById("matt_tongues").focus(); }
+
 
 function enableParty(){
 
