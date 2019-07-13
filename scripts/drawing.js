@@ -23,7 +23,11 @@ var game_data = {
 	num_clothing: 0,
 	num_food: 0,
 	num_worms: 0,
-	num_spare_parts: 0	
+	num_spare_parts: 0,
+	num_wagon_axles: 0,
+	num_wagon_tongues: 0,
+	num_wagon_wheels: 0
+	
 }
 
 var matt_bill = {
@@ -51,7 +55,9 @@ function init(){
 	game_data.num_clothing = 0;
 	game_data.num_food = 0;
 	game_data.num_worms = 0;
-	game_data.num_spare_parts = 0;
+	game_data.num_wagon_wheels = 0;
+	game_data.num_wagon_axles = 0;
+	game_data.num_wagon_tongues = 0;
 	matt_bill.oxen_amt = 0;
 	matt_bill.food_amt = 0; 
 	matt_bill.clothing_amt = 0;
@@ -237,12 +243,87 @@ function addListeners(){
 			  handleMatt(matt.value);
 		  }
 	  });	
-	  //245, 352
 	  document.getElementById("matt_text").style.top = "422px";
 	  document.getElementById("matt_text").style.left = "855px";
 	  matt.addEventListener("focusout", mattFocus);
 	  
 	}
+	
+	var matt_oxen = document.getElementById("matt_oxen");
+	if (matt_oxen != null){
+		
+	  	  matt_oxen.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattOxen(matt_oxen.value);
+		  }
+	  });	
+	  document.getElementById("matt_oxen").style.top = "343px";
+	  document.getElementById("matt_oxen").style.left = "710px";
+	  document.getElementById("matt_oxen").style.width = "300px";
+	  matt_oxen.addEventListener("focusout", mattOxenFocus);
+	  
+	}
+	
+	var matt_food = document.getElementById("matt_food");
+	if (matt_food != null){
+		
+	  	  matt_food.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattFood(matt_food.value);
+		  }
+	  });	
+	  document.getElementById("matt_food").style.top = "433px";
+	  document.getElementById("matt_food").style.left = "768px";
+	  document.getElementById("matt_food").style.width = "270px";
+	  matt_food.addEventListener("focusout", mattFoodFocus);
+	  
+	}
+	
+	var matt_clothing = document.getElementById("matt_clothing");
+	if (matt_clothing != null){
+		
+	  	  matt_clothing.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattClothing(matt_clothing.value);
+		  }
+	  });	
+	  document.getElementById("matt_clothing").style.top = "372px";
+	  document.getElementById("matt_clothing").style.left = "768px";
+	  document.getElementById("matt_clothing").style.width = "270px";
+	  matt_clothing.addEventListener("focusout", mattClothingFocus);
+	  
+	}
+	
+	var matt_worms = document.getElementById("matt_worms");
+	if (matt_worms != null){
+		
+	  	  matt_worms.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattWorms(matt_worms.value);
+		  }
+	  });	
+	  document.getElementById("matt_worms").style.top = "333px";
+	  document.getElementById("matt_worms").style.left = "773px";
+	  document.getElementById("matt_worms").style.width = "200px";
+	  matt_worms.addEventListener("focusout", mattWormsFocus);
+	  
+	}
+	
+	var matt_parts = document.getElementById("matt_parts");
+	if (matt_parts != null){
+		
+	  	  matt_parts.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMattParts(matt_parts.value);
+		  }
+	  });	
+	  document.getElementById("matt_parts").style.top = "422px";
+	  document.getElementById("matt_parts").style.left = "855px";
+	  document.getElementById("matt_parts").style.width = "300px";
+	  matt_parts.addEventListener("focusout", mattPartsFocus);
+	  
+	}
+
 	
 	document.body.onkeyup = function (e){
 		
@@ -994,13 +1075,13 @@ function drawMattStorefront(){
 	ctx.lineTo(585, 232);
 	ctx.stroke();
 	
-	var curr_funds = "$" + game_data.current_money + ".00";
-	var curr_oxen = "$" + matt_bill.oxen_amt + ".00";
-	var curr_food = "$" + matt_bill.food_amt + ".00";
-	var curr_clothing = "$" + matt_bill.clothing_amt + ".00";
-	var curr_worm = "$" + matt_bill.worm_amt + ".00";
-	var curr_parts = "$" + matt_bill.parts_amt + ".00";
-	var curr_total = "$" + matt_bill.total + ".00";
+	var curr_funds = "$" + game_data.current_money.toFixed(2);
+	var curr_oxen = "$" + matt_bill.oxen_amt.toFixed(2);
+	var curr_food = "$" + matt_bill.food_amt.toFixed(2);
+	var curr_clothing = "$" + matt_bill.clothing_amt.toFixed(2);
+	var curr_worm = "$" + matt_bill.worm_amt.toFixed(2);
+	var curr_parts = "$" + matt_bill.parts_amt.toFixed(2);
+	var curr_total = "$" + matt_bill.total.toFixed(2);
 	
 	ctx.fillText("Matt's General Store",250,50);
 	ctx.fillText("Independence, Missouri",250, 70);
@@ -1033,6 +1114,352 @@ function drawMattStorefront(){
 	document.getElementById("matt_text").focus();
   
 	game_data.menu_counter = menu_enum.MATT_STOREFRONT;
+}
+
+function drawMattOxen(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_oxen_img");
+	ctx.drawImage(img, 290, 315, 170, 120);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("There are 2 oxen in a yoke;",200, 162);
+	ctx.fillText("I recommend at least 3 yoke.",200, 182);
+	ctx.fillText("I charge $40 a yoke.",200, 202);
+
+	ctx.fillText("How many yoke do you",200, 252);
+	ctx.fillText("want?",200, 272);  
+	
+	document.getElementById("matt_oxen").setAttribute("type","text");
+	document.getElementById("matt_oxen").setAttribute("value","");
+	document.getElementById("matt_oxen").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattOxenInvalid(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_oxen_img");
+	ctx.drawImage(img, 290, 315, 170, 120);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("There are 2 oxen in a yoke;",200, 162);
+	ctx.fillText("I recommend at least 3 yoke.",200, 182);
+	ctx.fillText("I charge $40 a yoke.",200, 202);
+
+	ctx.fillText("How many yoke do you",200, 252);
+	ctx.fillText("want?",200, 272);  
+	
+	document.getElementById("matt_oxen").setAttribute("type","text");
+	document.getElementById("matt_oxen").setAttribute("value","");
+	document.getElementById("matt_oxen").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattFood(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_food_img");
+	ctx.drawImage(img, 320, 372, 90, 60);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("I recommend you take at",200, 162);
+	ctx.fillText("least 200 pounds of food",200, 182);
+	ctx.fillText("for each person in your",200, 202);
+	ctx.fillText("family. I see that you have",200, 222);
+	ctx.fillText("5 people in all. You'll need",200, 242);
+	ctx.fillText("flour, sugar, bacon, and",200, 262);
+	ctx.fillText("coffee. My price is 20",200, 282);
+	ctx.fillText("cents per pound.",200, 302);
+
+	ctx.fillText("How many pounds of food do",200, 342);
+	ctx.fillText("you want?",200, 362);  
+	
+	document.getElementById("matt_food").setAttribute("type","text");
+	document.getElementById("matt_food").setAttribute("value","");
+	document.getElementById("matt_food").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattFoodInvalid(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_food_img");
+	ctx.drawImage(img, 320, 372, 90, 60);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("I recommend you take at",200, 162);
+	ctx.fillText("least 200 pounds of food",200, 182);
+	ctx.fillText("for each person in your",200, 202);
+	ctx.fillText("family. I see that you have",200, 222);
+	ctx.fillText("5 people in all. You'll need",200, 242);
+	ctx.fillText("flour, sugar, bacon, and",200, 262);
+	ctx.fillText("coffee. My price is 20",200, 282);
+	ctx.fillText("cents per pound.",200, 302);
+
+	ctx.fillText("How many pounds of food do",200, 342);
+	ctx.fillText("you want?",200, 362);  
+	
+	document.getElementById("matt_food").setAttribute("type","text");
+	document.getElementById("matt_food").setAttribute("value","");
+	document.getElementById("matt_food").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattClothing(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_clothing_img");
+	ctx.drawImage(img, 320, 325, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("You'll need warm clothing in",200, 162);
+	ctx.fillText("the mountains. I recommend",200, 182);
+	ctx.fillText("taking at least 2 sets of",200, 202);
+	ctx.fillText("clothes per person. Each",200, 222);
+	ctx.fillText("set is $10.00.",200, 242);
+
+	ctx.fillText("How many sets of clothes do",200, 282);
+	ctx.fillText("you want?",200, 302);  
+	
+	document.getElementById("matt_clothing").setAttribute("type","text");
+	document.getElementById("matt_clothing").setAttribute("value","");
+	document.getElementById("matt_clothing").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattClothingInvalid(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_clothing_img");
+	ctx.drawImage(img, 320, 325, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("You'll need warm clothing in",200, 162);
+	ctx.fillText("the mountains. I recommend",200, 182);
+	ctx.fillText("taking at least 2 sets of",200, 202);
+	ctx.fillText("clothes per person. Each",200, 222);
+	ctx.fillText("set is $10.00.",200, 242);
+
+	ctx.fillText("How many sets of clothes do",200, 282);
+	ctx.fillText("you want?",200, 302);  
+	
+	document.getElementById("matt_clothing").setAttribute("type","text");
+	document.getElementById("matt_clothing").setAttribute("value","");
+	document.getElementById("matt_clothing").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+	
+}
+
+function drawMattWorm(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_worm_img");
+	ctx.drawImage(img, 320, 325, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	
+	ctx.fillText("I sell baitworms in sets",200, 162);
+	ctx.fillText("of 20 worms. Each set",200, 182);
+	ctx.fillText("costs $2.00.",200, 202);
+
+	ctx.fillText("How many sets do you",200, 242);
+	ctx.fillText("you want?",200, 262);  
+	
+	document.getElementById("matt_worms").setAttribute("type","text");
+	document.getElementById("matt_worms").setAttribute("value","");
+	document.getElementById("matt_worms").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+
+}
+
+function drawMattWormInvalid(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	img = document.getElementById("matt_worm_img");
+	ctx.drawImage(img, 320, 325, 120, 80);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 80);
+	ctx.lineTo(585, 80);
+	ctx.stroke();
+	ctx.beginPath();
+		
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText("You didn't have enough cash.",200, 100);
+	
+	ctx.fillText("I sell baitworms in sets",200, 162);
+	ctx.fillText("of 20 worms. Each set",200, 182);
+	ctx.fillText("costs $2.00.",200, 202);
+
+	ctx.fillText("How many sets do you",200, 242);
+	ctx.fillText("you want?",200, 262);  
+	
+	document.getElementById("matt_worms").setAttribute("type","text");
+	document.getElementById("matt_worms").setAttribute("value","");
+	document.getElementById("matt_worms").focus();
+  
+    var curr_total = "$" + matt_bill.total.toFixed(2);
+	ctx.fillText("Bill so far:",245, 450);
+	ctx.fillText(curr_total,420, 450);
+
 }
 
 function handleTitle(val){ 
@@ -1234,6 +1661,111 @@ function handleMonth(val){
 }
 
 function handleMatt(val){
+
+	if (val.length == 1){
+		
+		if (val == 1) { drawMattOxen(); }
+		else if (val == 2) { drawMattFood(); }
+		else if (val == 3) { drawMattClothing(); }
+		else if (val == 4) { drawMattWorm(); }
+		else if (val == 5) { drawMattParts(); }
+		
+	} else { return; }
+	
+}
+
+function handleMattOxen(val){
+
+  if (val.length > 0){
+	 
+	var oxen = val * 40;
+	  
+	// $40 per yoke
+    if (oxen <= game_data.current_money){ 
+	  game_data.current_money -= oxen; 
+	  matt_bill.total += oxen;
+	  matt_bill.oxen_amt += oxen;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.oxen_amt.toFixed(2);
+	  game_data.num_oxen += val;
+	  drawMattStorefront();
+	} else { drawMattOxenInvalid(); }
+
+  }
+	
+}
+
+function handleMattFood(val){
+
+  if (val.length > 0){
+	 
+	// 20 cents per pound
+	var food = val * .20;
+	//alert(food);
+	  
+	// $40 per yoke
+    if (food <= game_data.current_money){ 
+	  //alert("inside");
+	  game_data.current_money -= food; 
+	  matt_bill.total += food;
+	  matt_bill.food_amt += food;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.food_amt.toFixed(2);
+	  game_data.num_food += val;
+	  drawMattStorefront();
+	} else { drawMattFoodInvalid(); }
+
+  }
+	
+}
+
+function handleMattClothing(val){
+
+  if (val.length > 0){
+	 
+	// 20 cents per pound
+	var clothing = val * 10;
+	  
+	// $40 per yoke
+    if (clothing <= game_data.current_money){ 
+
+	  game_data.current_money -= clothing; 
+	  matt_bill.total += clothing;
+	  matt_bill.clothing_amt += clothing;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.food_amt.toFixed(2);
+	  game_data.num_clothing += val;
+	  drawMattStorefront();
+	} else { drawMattClothingInvalid(); }
+
+  }
+	
+}
+
+function handleMattWorms(val){
+
+  if (val.length > 0){
+	 
+	// 20 cents per pound
+	var worms = val * 2;
+	  
+	// $40 per yoke
+    if (worms <= game_data.current_money){ 
+
+	  game_data.current_money -= worms; 
+	  matt_bill.total += worms;
+	  matt_bill.worm_amt += worms;
+	  game_data.current_money.toFixed(2);
+	  matt_bill.total.toFixed(2);
+	  matt_bill.worm_amt.toFixed(2);
+	  game_data.num_worms += val;
+	  drawMattStorefront();
+	} else { drawMattWormInvalid(); }
+
+  }
 	
 }
 
@@ -1264,6 +1796,17 @@ function hideTextBoxes(){
 	document.getElementById("month").setAttribute("autofocus","");
 	document.getElementById("matt_text").setAttribute("type","hidden");
 	document.getElementById("matt_text").setAttribute("autofocus","");
+	document.getElementById("matt_oxen").setAttribute("type","hidden");
+	document.getElementById("matt_oxen").setAttribute("autofocus","");
+	document.getElementById("matt_food").setAttribute("type","hidden");
+	document.getElementById("matt_food").setAttribute("autofocus","");
+	document.getElementById("matt_clothing").setAttribute("type","hidden");
+	document.getElementById("matt_clothing").setAttribute("autofocus","");
+	document.getElementById("matt_worms").setAttribute("type","hidden");
+	document.getElementById("matt_worms").setAttribute("autofocus","");
+	document.getElementById("matt_parts").setAttribute("type","hidden");
+	document.getElementById("matt_parts").setAttribute("autofocus","");
+	
 }
 
 function showPartyTextBoxes(){
@@ -1293,6 +1836,11 @@ function partyCorrectFocus() { document.getElementById("party_correct").focus();
 function explainPointsFocus() { document.getElementById("explain_points").focus(); }
 function monthFocus() { document.getElementById("month").focus(); }
 function mattFocus() { document.getElementById("matt_text").focus(); }
+function mattOxenFocus() { document.getElementById("matt_oxen").focus(); }
+function mattFoodFocus() { document.getElementById("matt_food").focus(); }
+function mattClothingFocus() { document.getElementById("matt_clothing").focus(); }
+function mattWormsFocus() { document.getElementById("matt_worms").focus(); }
+function mattPartsFocus() { document.getElementById("matt_parts").focus(); }
 
 function enableParty(){
 
