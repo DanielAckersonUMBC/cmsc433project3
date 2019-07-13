@@ -254,6 +254,6 @@ $(async () => {
 
         4. Supplies
             - oxen, food, clothing, ammo?, spare parts
-    /*
+    */
 
 });
