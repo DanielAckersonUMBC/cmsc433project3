@@ -1,32 +1,73 @@
-var menu_counter = 0; // just for screen navigation
 var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
-GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11 };
-var chosen_profession = ""; // can be used for gameplay implications 
-var leader_name = "";
+GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11,
+EXP_PROF: 12, EXP_MONTH: 13, SUPPLY_MSG: 14, MATT_MSG: 15, MATT_WELCOME: 16, MATT_WELCOME2: 17,
+MATT_STOREFRONT: 18 };
 var TOP_TEN = 10;
-var use_default_party_names = 1;
-var party_text_selector = 1;
-var party1 = ""; party2 = ""; party3 = ""; party4 = "";; // ONLY used if all 4 names are entered!
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
-var esc_pressed = 0;
+var MONTHS = ["", "March", "April", "May", "June", "July"];
+var c;
+var ctx;
+
+var game_data = {
+	
+	menu_counter: 0, // just for screen navigation
+	chosen_profession: "",
+	chosen_month: "",
+	leader_name: "",
+	party_text_selector: 1,
+	party1: "", party2: "", party3: "", party4: "",
+	esc_pressed: 0,
+	current_money: 1600,
+	current_matt_bill: 0,
+	num_oxen: 0,
+	num_clothing: 0,
+	num_food: 0,
+	num_worms: 0,
+	num_spare_parts: 0	
+}
+
+var matt_bill = {
+	
+	oxen_amt: 0,
+	food_amt: 0,
+	clothing_amt: 0,
+	worm_amt: 0,
+	parts_amt: 0,
+	total: 0
+		
+}
 
 function init(){
 	
-	var menu_counter = 0; // just for screen navigation
-	var chosen_profession = ""; // can be used for gameplay implications 
-	var leader_name = "";
-	var TOP_TEN = 10;
-	var use_default_party_names = 1;
-	var party_text_selector = 1;
-	var party1 = ""; party2 = ""; party3 = ""; party4 = "";; // ONLY used if all 4 names are entered!
-	var esc_pressed = 0;
+	game_data.menu_counter = 0; // just for screen navigation
+	game_data.chosen_profession = ""; // can be used for gameplay implications 
+	game_data.leader_name = "";
+	game_data.party_text_selector = 1;
+	game_data.party1 = ""; game_data.party2 = ""; game_data.party3 = ""; game_data.party4 = "";; // ONLY used if all 4 names are entered!
+	game_data.esc_pressed = 0;
+	game_data.current_money = 1600;
+	game_data.current_matt_bill = 0;
+	game_data.num_oxen = 0;
+	game_data.num_clothing = 0;
+	game_data.num_food = 0;
+	game_data.num_worms = 0;
+	game_data.num_spare_parts = 0;
+	matt_bill.oxen_amt = 0;
+	matt_bill.food_amt = 0; 
+	matt_bill.clothing_amt = 0;
+	matt_bill.worm_amt = 0;
+	matt_bill.parts_amt = 0;
+	matt_bill.total = 0;
 
 }
 
 $( document ).ready(function() {
-
+	
+	c = document.getElementById("myCanvas");
+	ctx = c.getContext("2d");
 	drawTitle();
 	addListeners();
+
   
 });
 
@@ -175,24 +216,58 @@ function addListeners(){
 		
 	}
 	
+	var month = document.getElementById("month");
+	if (month != null){
+		
+	  	  month.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMonth(month.value);
+		  }
+	  });	
+	
+	  month.addEventListener("focusout", monthFocus);
+	  
+	}
+	
+	var matt = document.getElementById("matt_text");
+	if (matt != null){
+		
+	  	  matt.addEventListener("keydown", function (e) {
+		  if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+			  handleMatt(matt.value);
+		  }
+	  });	
+	  //245, 352
+	  document.getElementById("matt_text").style.top = "422px";
+	  document.getElementById("matt_text").style.left = "855px";
+	  matt.addEventListener("focusout", mattFocus);
+	  
+	}
+	
 	document.body.onkeyup = function (e){
 		
-		if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO2){ drawGameInfo3();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO3){ drawGameInfo4();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO4){ drawGameInfo5();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO5){ drawGameInfo6();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO6){ drawGameInfo7();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.GAME_INFO7){ drawTitle();	}
-		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS1) { drawExplainPoints2(); }
-		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS2){ drawExplainPoints3(); }
-		else if (e.keyCode == 32 && menu_counter == menu_enum.EXP_POINTS3) { drawTitle(); }
+		if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO1){ drawGameInfo2(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO2){ drawGameInfo3();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO3){ drawGameInfo4();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO4){ drawGameInfo5();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO5){ drawGameInfo6();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO6){ drawGameInfo7();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.GAME_INFO7){ drawTitle();	}
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.EXP_POINTS1) { drawExplainPoints2(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.EXP_POINTS2){ drawExplainPoints3(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.EXP_POINTS3) { drawTitle(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.EXP_PROF) { drawProfPage(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.EXP_MONTH) { drawMonthPick(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.SUPPLY_MSG) { drawMattMsg(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_MSG) { drawMattWelcome(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME) { drawMattWelcome2(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME2) { drawMattStorefront(); }
 		
 		else if (e.keyCode == 27){
 			
-          console.log(esc_pressed);
-          esc_pressed += 1;
-		  if (esc_pressed > 1){ 
+          console.log(game_data.esc_pressed);
+          game_data.esc_pressed += 1;
+		  if (game_data.esc_pressed > 1){ 
 		   
 		    hideTextBoxes();
 		    drawTitle(); 			
@@ -201,7 +276,7 @@ function addListeners(){
 		
 		} 
 		
-		else if (e.keyCode != 27) { esc_pressed = 0; }
+		else if (e.keyCode != 27) { game_data.esc_pressed = 0; }
 		
 	}
 
@@ -210,16 +285,10 @@ function addListeners(){
 function drawTitle(){
 	
 	init();
-	
-	// Clear out the canvas.
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.clearRect(0,0,c.width,c.height);
-	esc_pressed = 0;
+    clearCanvas(); 
+	game_data.esc_pressed = 0;
 
 	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -241,7 +310,7 @@ function drawTitle(){
 	document.getElementById("title").setAttribute("value","");			
 	document.getElementById("title").focus();
 
-	menu_counter = 0;
+	game_data.menu_counter = 0;
 	
 }
 
@@ -255,9 +324,7 @@ function drawHighScores(){
 		json = JSON.parse(this.responseText);
 		console.log(json);
 		
-		// Draws the highscore screen.
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");	
+		// Draws the highscore screen.	
 		ctx.lineWidth = "6";
 		ctx.beginPath();
 		ctx.moveTo(30, 15);
@@ -308,8 +375,7 @@ function drawHighScores(){
 
 function drawProfPage(){
 			
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
+	clearCanvas();
 	img = document.getElementById("title_graphic.png");
 	ctx.drawImage(img, 12, 10);
 	ctx.font = "16px AppleII";
@@ -334,8 +400,6 @@ function drawProfPage(){
 
 function drawLeaderName(){
 	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	img = document.getElementById("misc");
 	ctx.drawImage(img, 100, 170, 160, 105, 30, 50, 250, 200);
 	img = document.getElementById("family");
@@ -354,9 +418,7 @@ function drawLeaderName(){
 
 function drawPartyNames(){
 
-    party_text_selector = 1;
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
+    game_data.party_text_selector = 1;
 	img = document.getElementById("misc");
 	ctx.drawImage(img, 100, 170, 160, 105, 30, 50, 250, 200);
 	img = document.getElementById("family");
@@ -374,7 +436,7 @@ function drawPartyNames(){
 	
 	// Enable the input boxes.
 	document.getElementById("party1").setAttribute("type","text");
-	document.getElementById("party1").setAttribute("value",leader_name);
+	document.getElementById("party1").setAttribute("value",game_data.leader_name);
 	document.getElementById("party1").readOnly = true;	
 	document.getElementById("party1").style.top = "410px";
 	document.getElementById("party1").style.left = "550px";
@@ -386,8 +448,6 @@ function drawPartyNames(){
 
 function drawStartMonth(){
 
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	img = document.getElementById("title_graphic.png");
 	ctx.drawImage(img, 12, 10);
 	ctx.font = "16px AppleII";
@@ -413,9 +473,7 @@ function drawStartMonth(){
 function drawVerifyParty(){
 	
 	clearCanvas();
-    party_text_selector = 0;
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
+    game_data.party_text_selector = 0;
 	img = document.getElementById("misc");
 	ctx.drawImage(img, 100, 170, 160, 105, 30, 50, 250, 200);
 	img = document.getElementById("family");
@@ -443,8 +501,6 @@ function drawGameInfo1(){
 	hideTextBoxes();
 
 	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -463,7 +519,7 @@ function drawGameInfo1(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO1;
+	game_data.menu_counter = menu_enum.GAME_INFO1;
 
 }
 
@@ -472,9 +528,6 @@ function drawGameInfo2(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -490,7 +543,7 @@ function drawGameInfo2(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO2;
+	game_data.menu_counter = menu_enum.GAME_INFO2;
 
 }
 
@@ -499,9 +552,6 @@ function drawGameInfo3(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -516,7 +566,7 @@ function drawGameInfo3(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO3;
+	game_data.menu_counter = menu_enum.GAME_INFO3;
 
 }
 
@@ -525,9 +575,6 @@ function drawGameInfo4(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -543,7 +590,7 @@ function drawGameInfo4(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO4;
+	game_data.menu_counter = menu_enum.GAME_INFO4;
 
 }
 
@@ -552,9 +599,6 @@ function drawGameInfo5(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -573,7 +617,7 @@ function drawGameInfo5(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO5;
+	game_data.menu_counter = menu_enum.GAME_INFO5;
 
 }
 
@@ -582,9 +626,6 @@ function drawGameInfo6(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -600,7 +641,7 @@ function drawGameInfo6(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO6;
+	game_data.menu_counter = menu_enum.GAME_INFO6;
 
 }
 
@@ -609,9 +650,6 @@ function drawGameInfo7(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	var img = document.getElementById("trail_title");
 	ctx.drawImage(img, 2.5, 10);
 	img = document.getElementById("title_graphic.png");
@@ -630,7 +668,7 @@ function drawGameInfo7(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.GAME_INFO7;
+	game_data.menu_counter = menu_enum.GAME_INFO7;
 
 }
 
@@ -638,8 +676,6 @@ function drawExplainPoints1(){
 
 		clearCanvas();
 
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");	
 		ctx.lineWidth = "6";
 		ctx.beginPath();
 		ctx.moveTo(30, 15);
@@ -686,7 +722,7 @@ function drawExplainPoints1(){
 		ctx.fillText("Points per", 365, 280);
 		ctx.fillText("Person", 405, 300);		
 		
-		menu_counter = menu_enum.EXP_POINTS1;
+		game_data.menu_counter = menu_enum.EXP_POINTS1;
 		
 }
 
@@ -694,8 +730,6 @@ function drawExplainPoints2(){
 
 		clearCanvas();
 
-		var c = document.getElementById("myCanvas");
-		var ctx = c.getContext("2d");	
 		ctx.lineWidth = "6";
 		ctx.beginPath();
 		ctx.moveTo(30, 15);
@@ -749,7 +783,7 @@ function drawExplainPoints2(){
 		ctx.fillText("Points per", 365, 230);
 		ctx.fillText("Item", 405, 250);		
 		
-		menu_counter = menu_enum.EXP_POINTS2;
+		game_data.menu_counter = menu_enum.EXP_POINTS2;
 		
 }
 
@@ -758,9 +792,6 @@ function drawExplainPoints3(){
     clearCanvas();
 	hideTextBoxes();
 
-	// Draws the title screen.	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
 	img = document.getElementById("title_graphic.png");
 	ctx.drawImage(img, 12, 70);
 	ctx.font = "16px AppleII";
@@ -777,8 +808,231 @@ function drawExplainPoints3(){
 	ctx.fillText("Press SPACE BAR to continue",125, 460);
 	ctx.drawImage(img, 12, 385);
 		  
-	menu_counter = menu_enum.EXP_POINTS3;
+	game_data.menu_counter = menu_enum.EXP_POINTS3;
 
+}
+
+function drawProfInfo(){
+	
+	img = document.getElementById("title_graphic.png");
+	hideTextBoxes();
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Traveling to Oregon isn't easy!",120,100);
+	ctx.fillText("But if you're a banker, you'll",120,120);
+	ctx.fillText("have more money for supplies",120, 140);
+	ctx.fillText("and services than a carpenter", 120, 160);
+	ctx.fillText("or a farmer.", 120, 180);
+	ctx.fillText("However, the harder you have", 120, 220);
+	ctx.fillText("to try, the more points you", 120, 240);
+	ctx.fillText("deserve! Therefore, the", 120, 260); 
+	ctx.fillText("farmer earns the greatest",120, 280);
+	ctx.fillText("number of points and the",120, 300);
+	ctx.fillText("banker earns the least.",120, 320);
+	ctx.drawImage(img, 12, 375);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.EXP_PROF;
+	
+}
+
+function drawMonthPick(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("title_graphic.png");
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("It is 1848. Your jumping off",80,100);
+	ctx.fillText("place for Oregon is Independence,",80,120);
+	ctx.fillText("Missouri. You must decide which",80,140);
+	ctx.fillText("month to leave Independence.",80,160);
+	ctx.fillText("1.  March", 107, 200);
+	ctx.fillText("2.  April", 107, 220);
+	ctx.fillText("3.  May", 107, 240);
+	ctx.fillText("4.  June", 107, 260);
+	ctx.fillText("5.  July", 107, 280); 
+	ctx.fillText("6.  Ask for advice", 107, 300);
+	ctx.fillText("What is your choice?",80, 345);
+	ctx.drawImage(img, 12, 375);
+	  	  
+	// Bring the input box back.
+	document.getElementById("month").setAttribute("type","text");
+	document.getElementById("month").setAttribute("value","");			
+	document.getElementById("month").focus();
+
+}
+
+function drawMonthInfo(){
+
+	img = document.getElementById("title_graphic.png");
+	clearCanvas();
+	hideTextBoxes();
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("You attend a public meeting held",120,100);
+	ctx.fillText('for "folks with the California -"',120,120);
+	ctx.fillText('Oregon fever." You\'re told:',120, 140);
+	ctx.fillText("If you leave too early, there", 120, 180);
+	ctx.fillText("won't be any grass for your", 120, 200);
+	ctx.fillText("However, the harder you have", 120, 220);
+	ctx.fillText("to try, the more points you", 120, 240);
+	ctx.fillText("deserve! Therefore, the", 120, 260); 
+	ctx.fillText("farmer earns the greatest",120, 280);
+	ctx.fillText("number of points and the",120, 300);
+	ctx.fillText("banker earns the least.",120, 320);
+	ctx.drawImage(img, 12, 375);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.EXP_MONTH;
+	
+}
+
+function drawSupplyMsg(){
+
+	img = document.getElementById("title_graphic.png");
+	clearCanvas();
+	hideTextBoxes();
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Before leaving Independence you",120,200);
+	ctx.fillText("should buy equipment and",120,220);
+	ctx.fillText("supplies. You have $1600.00 in",120, 240);
+	ctx.fillText("cash, but you don't have to", 120, 260);
+	ctx.fillText("spend it all now.", 120, 280);
+	ctx.drawImage(img, 12, 375);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.SUPPLY_MSG;
+	
+}
+
+function drawMattMsg(){
+	
+	img = document.getElementById("title_graphic.png");
+	clearCanvas();
+	hideTextBoxes();
+	ctx.drawImage(img, 12, 10);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("You can buy whatever you need at",120,220);
+	ctx.fillText("Matt's General Store.",120, 240);
+	ctx.drawImage(img, 12, 375);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.MATT_MSG;
+	
+}
+
+function drawMattWelcome(){
+	
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Hello, I'm Matt. So you're going",130,70);
+	ctx.fillText("to Oregon! I can fix you up with",130, 90);
+	ctx.fillText("what you need:",130, 110);
+	ctx.fillText("- a team of oxen to pull",200, 190);
+	ctx.fillText("your wagon",230, 210);
+	ctx.fillText("- clothing for both",200, 250);
+	ctx.fillText("summer and winter",230, 270);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.MATT_WELCOME;
+	
+}
+
+function drawMattWelcome2(){
+	
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "white";
+	ctx.fillText("Hello, I'm Matt. So you're going",130,70);
+	ctx.fillText("to Oregon! I can fix you up with",130, 90);
+	ctx.fillText("what you need:",130, 110);
+	ctx.fillText("- plenty of food for the",200, 190);
+	ctx.fillText("trip",230, 210);
+	ctx.fillText("- worms for your",200, 250);
+	ctx.fillText("fishing rod",230, 270);
+	ctx.fillText("- spare parts for your",200, 310);
+	ctx.fillText("wagon",230, 330);
+	ctx.fillText("Press SPACE BAR to continue",125, 460);
+	  	  	
+	game_data.menu_counter = menu_enum.MATT_WELCOME2;
+	
+}
+
+function drawMattStorefront(){
+
+	clearCanvas();
+	hideTextBoxes();
+	img = document.getElementById("matt");
+	ctx.drawImage(img, 40, 160, 110, 270);
+	
+	ctx.lineWidth = "6";
+	ctx.strokeStyle = "#ff3d3d";
+	ctx.beginPath();
+	ctx.moveTo(200, 30);
+	ctx.lineTo(585, 30);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 120);
+	ctx.lineTo(585, 120);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(200, 232);
+	ctx.lineTo(585, 232);
+	ctx.stroke();
+	
+	var curr_funds = "$" + game_data.current_money + ".00";
+	var curr_oxen = "$" + matt_bill.oxen_amt + ".00";
+	var curr_food = "$" + matt_bill.food_amt + ".00";
+	var curr_clothing = "$" + matt_bill.clothing_amt + ".00";
+	var curr_worm = "$" + matt_bill.worm_amt + ".00";
+	var curr_parts = "$" + matt_bill.parts_amt + ".00";
+	var curr_total = "$" + matt_bill.total + ".00";
+	
+	ctx.fillText("Matt's General Store",250,50);
+	ctx.fillText("Independence, Missouri",250, 70);
+	ctx.fillText(game_data.chosen_month,300, 112);
+	ctx.fillText("1,  1848",390, 112);
+	
+	ctx.fillText("1.  Oxen",230, 142);
+	ctx.fillText(curr_oxen,470, 142);
+	ctx.fillText("2.  Food",230, 162);
+	ctx.fillText(curr_food,470, 162);
+	ctx.fillText("3.  Clothing",230, 182);
+	ctx.fillText(curr_clothing,470, 182);
+	ctx.fillText("4.  Worms",230, 202);
+	ctx.fillText(curr_worm,470, 202);
+	ctx.fillText("5.  Spare parts",230, 222);
+	ctx.fillText(curr_parts,470, 222);
+	ctx.fillText("Total bill:",270, 252);
+	ctx.fillText(curr_total,470, 252); 
+	ctx.fillText("Amount you have:",210, 292);
+	ctx.fillText(curr_funds,470, 292);
+	
+	ctx.fillText("Which item would you", 245, 332);
+	ctx.fillText("like to buy?",245, 352);	
+
+	ctx.fillText("Press SPACE BAR to",245, 392);
+	ctx.fillText("leave store",245, 412);	
+	
+	document.getElementById("matt_text").setAttribute("type","text");
+	document.getElementById("matt_text").setAttribute("value","");
+	document.getElementById("matt_text").focus();
+  
+	game_data.menu_counter = menu_enum.MATT_STOREFRONT;
 }
 
 function handleTitle(val){ 
@@ -794,7 +1048,7 @@ function handleTitle(val){
   // switch statements.
   if (val == 1){ drawProfPage(); }
   else if (val == 2) { drawGameInfo1(); }
-  else if (val == 3) { menu_counter = 1; drawHighScores(); }
+  else if (val == 3) { game_data.menu_counter = 1; drawHighScores(); }
   
 }
 
@@ -809,21 +1063,25 @@ function handleProf(val){
   
   if (val > 0 && val < 4){ 
   
-    if (val == 1){ chosen_profession = "banker"; }
-	else if (val == 2){ chosen_profession = "carpenter"; }
-	else { chosen_profession = "farmer"; }
+    if (val == 1){ game_data.chosen_profession = "banker"; }
+	else if (val == 2){ game_data.chosen_profession = "carpenter"; }
+	else { game_data.chosen_profession = "farmer"; }
     drawLeaderName(); 
 	
   }
-  else if (val == 4){ }
+  else if (val == 4){ 
+  
+    drawProfInfo();
+  
+  }
 	
 }
 
 function handleLeader(){
 	
-	leader_name = document.getElementById('leader').value;
+	game_data.leader_name = document.getElementById('leader').value;
 	
-	if (leader_name.length > 0){
+	if (game_data.leader_name.length > 0){
 		
 	  hideTextBoxes();
 	  clearCanvas();
@@ -837,20 +1095,20 @@ function handleParty2(val){
 
   if (val.length > 0){
 	  
-    party1 = document.getElementById("party2").value;
-    party_text_selector = 2;
+    game_data.party1 = document.getElementById("party2").value;
+    game_data.party_text_selector = 2;
     document.getElementById("party3").focus();
 	
   }  else {
 	  
-	  party1 = DEFAULT_PARTY_NAMES[0];
-	  document.getElementById("party2").setAttribute("value",party1);
-	  party2 = DEFAULT_PARTY_NAMES[1];
-	  document.getElementById("party3").setAttribute("value",party2);
-	  party3 = DEFAULT_PARTY_NAMES[2];
-	  document.getElementById("party4").setAttribute("value",party3);
-	  party4 = DEFAULT_PARTY_NAMES[3];
-	  document.getElementById("party5").setAttribute("value",party4);
+	  game_data.party1 = DEFAULT_PARTY_NAMES[0];
+	  document.getElementById("party2").setAttribute("value",game_data.party1);
+	  game_data.party2 = DEFAULT_PARTY_NAMES[1];
+	  document.getElementById("party3").setAttribute("value",game_data.party2);
+	  game_data.party3 = DEFAULT_PARTY_NAMES[2];
+	  document.getElementById("party4").setAttribute("value",game_data.party3);
+	  game_data.party4 = DEFAULT_PARTY_NAMES[3];
+	  document.getElementById("party5").setAttribute("value",game_data.party4);
 	  drawVerifyParty();	  
 	  
   }    
@@ -861,18 +1119,18 @@ function handleParty3(val){
 
   if (val.length > 0){
 	  
-    party2 = document.getElementById("party3").value;
-    party_text_selector = 3;
+    game_data.party2 = document.getElementById("party3").value;
+    game_data.party_text_selector = 3;
     document.getElementById("party4").focus();  
 	
   }  else { 
   
-	  party2 = DEFAULT_PARTY_NAMES[1];
-	  document.getElementById("party3").setAttribute("value",party2);
-	  party3 = DEFAULT_PARTY_NAMES[2];
-	  document.getElementById("party4").setAttribute("value",party3);
-	  party4 = DEFAULT_PARTY_NAMES[3];
-	  document.getElementById("party5").setAttribute("value",party4);
+	  game_data.party2 = DEFAULT_PARTY_NAMES[1];
+	  document.getElementById("party3").setAttribute("value",game_data.party2);
+	  game_data.party3 = DEFAULT_PARTY_NAMES[2];
+	  document.getElementById("party4").setAttribute("value",game_data.party3);
+	  game_data.party4 = DEFAULT_PARTY_NAMES[3];
+	  document.getElementById("party5").setAttribute("value",game_data.party4);
 	  drawVerifyParty();	
 	  
   }  
@@ -884,15 +1142,15 @@ function handleParty4(val){
   if (val.length > 0){
 	  
     party3 = document.getElementById("party4").value;
-    party_text_selector = 4;
+    game_data.party_text_selector = 4;
     document.getElementById("party5").focus();  
 	
   }  else {
 	  
-	  party3 = DEFAULT_PARTY_NAMES[2];
-	  document.getElementById("party4").setAttribute("value",party3);
-	  party4 = DEFAULT_PARTY_NAMES[3];
-	  document.getElementById("party5").setAttribute("value",party4);
+	  game_data.party3 = DEFAULT_PARTY_NAMES[2];
+	  document.getElementById("party4").setAttribute("value",game_data.party3);
+	  game_data.party4 = DEFAULT_PARTY_NAMES[3];
+	  document.getElementById("party5").setAttribute("value",game_data.party4);
 	  drawVerifyParty();	
 	  
   }   
@@ -908,8 +1166,8 @@ function handleParty5(val){
 	
   }  else {
 	  
-	  party4 = DEFAULT_PARTY_NAMES[3];
-	  document.getElementById("party5").setAttribute("value",party4);
+	  game_data.party4 = DEFAULT_PARTY_NAMES[3];
+	  document.getElementById("party5").setAttribute("value",game_data.party4);
 	  drawVerifyParty();	
 	  
   }   
@@ -918,17 +1176,16 @@ function handleParty5(val){
 
 function handlePartyCorrect(val){
 
-  if (val.length > 0){
+  if (val.length == 1 ){
   
     if (val == "Y" || val == "y"){
 		
-		clearCanvas();
-		hideTextBoxes();
+		drawMonthPick();
 		
 	}
 	else if (val == "N" || val == "n"){
 	 
-	  party1 = party2 = party3 = party4 = "";
+	  game_data.party1 = game_data.party2 = game_data.party3 = game_data.party4 = "";
 	  clearCanvas();
 	  hideTextBoxes();
 	  drawPartyNames();
@@ -942,7 +1199,7 @@ function handlePartyCorrect(val){
 
 function handleExplainPoints(val){
 	
-	if(val.length > 0){
+	if(val.length == 1){
 		
 		if (val == "Y" || val == "y"){
 			
@@ -958,6 +1215,25 @@ function handleExplainPoints(val){
 		}			
 		
 	}
+	
+}
+
+function handleMonth(val){
+
+  if(val.length == 1){
+  
+    if (val != 6){
+		
+		game_data.chosen_month = MONTHS[val];
+		drawSupplyMsg();
+		
+	} else if (val == 6){ drawMonthInfo(); }	  
+
+  }
+	
+}
+
+function handleMatt(val){
 	
 }
 
@@ -984,40 +1260,39 @@ function hideTextBoxes(){
 	document.getElementById("party_correct").setAttribute("autofocus","");
 	document.getElementById("explain_points").setAttribute("type","hidden");
 	document.getElementById("explain_points").setAttribute("autofocus","");
+	document.getElementById("month").setAttribute("type","hidden");
+	document.getElementById("month").setAttribute("autofocus","");
+	document.getElementById("matt_text").setAttribute("type","hidden");
+	document.getElementById("matt_text").setAttribute("autofocus","");
 }
 
 function showPartyTextBoxes(){
 
 	document.getElementById("party1").setAttribute("type","text");
-	document.getElementById("party1").setAttribute("value",leader_name);
+	document.getElementById("party1").setAttribute("value",game_data.leader_name);
 	
 	document.getElementById("party2").setAttribute("type","text");
-	document.getElementById("party2").setAttribute("value",party1);
+	document.getElementById("party2").setAttribute("value",game_data.party1);
 	
 	document.getElementById("party3").setAttribute("type","text");
-	document.getElementById("party3").setAttribute("value",party2);
+	document.getElementById("party3").setAttribute("value",game_data.party2);
 	
 	document.getElementById("party4").setAttribute("type","text");
-	document.getElementById("party4").setAttribute("value",party3);
+	document.getElementById("party4").setAttribute("value",game_data.party3);
 	
 	document.getElementById("party5").setAttribute("type","text");
-	document.getElementById("party5").setAttribute("value",party4);
+	document.getElementById("party5").setAttribute("value",game_data.party4);
 	
 }
 
-function clearCanvas(){
-	
-	var c = document.getElementById("myCanvas");
-	var ctx = c.getContext("2d");
-	ctx.clearRect(0,0,c.width,c.height);
-	
-}
-
+function clearCanvas(){	ctx.clearRect(0,0,c.width,c.height); }
 function titleFocus(){ document.getElementById("title").focus(); }
 function profFocus(){ document.getElementById("prof").focus(); }
 function leaderFocus(){ document.getElementById("leader").focus(); }
 function partyCorrectFocus() { document.getElementById("party_correct").focus(); }
 function explainPointsFocus() { document.getElementById("explain_points").focus(); }
+function monthFocus() { document.getElementById("month").focus(); }
+function mattFocus() { document.getElementById("matt_text").focus(); }
 
 function enableParty(){
 
@@ -1034,9 +1309,9 @@ function enableParty(){
 
 function partyFocus(){
 
-  if (party_text_selector == 1){ document.getElementById("party2").focus(); }
-  else if (party_text_selector == 2){ document.getElementById("party3").focus(); }
-  else if (party_text_selector == 3){ document.getElementById("party4").focus(); }
-  else if (party_text_selector == 4){ document.getElementById("party5").focus(); }
+  if (game_data.party_text_selector == 1){ document.getElementById("party2").focus(); }
+  else if (game_data.party_text_selector == 2){ document.getElementById("party3").focus(); }
+  else if (game_data.party_text_selector == 3){ document.getElementById("party4").focus(); }
+  else if (game_data.party_text_selector == 4){ document.getElementById("party5").focus(); }
 	
 }
