@@ -1,7 +1,7 @@
 var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
 GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11,
 EXP_PROF: 12, EXP_MONTH: 13, SUPPLY_MSG: 14, MATT_MSG: 15, MATT_WELCOME: 16, MATT_WELCOME2: 17,
-MATT_STOREFRONT: 18, MATT_GOODBYE: 19 };
+MATT_STOREFRONT: 18, MATT_GOODBYE: 19, INDEPENDENCE: 20 };
 var TOP_TEN = 10;
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
 var MONTHS = ["", "March", "April", "May", "June", "July"];
@@ -58,6 +58,7 @@ function init(){
 	game_data.num_wagon_wheels = 0;
 	game_data.num_wagon_axles = 0;
 	game_data.num_wagon_tongues = 0;
+	game_data.miles_traveled = 0;
 	matt_bill.oxen_amt = 0;
 	matt_bill.food_amt = 0; 
 	matt_bill.clothing_amt = 0;
@@ -381,6 +382,7 @@ function addListeners(){
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME) { drawMattWelcome2(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME2) { drawMattStorefront(); }
 		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.MATT_GOODBYE){ drawIndependence(); }
+		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.INDEPENDENCE){ playGame(); }
 		
 		// Handles the double escape to quit functionality.
 		else if (e.keyCode == 27){
@@ -1795,6 +1797,13 @@ function drawIndependence(){
 
 	clearCanvas();
 	hideTextBoxes();
+	img = document.getElementById("Independence_img");
+	canvas = document.getElementById("myCanvas");
+	ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+}
+
+function playGame(){
+	clearCanvas();
 	
 }
 
