@@ -6,6 +6,7 @@ class Person{ // Person class: Contains the name, health status and current heal
 	}
 }
 
+
 class Wagon{ // Wagon class: Contains the starting type, settler array and item numbers
 	constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels){
 		this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
@@ -19,7 +20,6 @@ class Wagon{ // Wagon class: Contains the starting type, settler array and item 
 		this.axels = axels;
 	}
 }
-
 
 function getPixelRGBA(pixelData, x, y, width, height) {
     let i = 4 * (x + y * width);
