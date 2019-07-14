@@ -23,6 +23,13 @@ var game_data = {
 	num_clothing: 0,
 	num_food: 0,
 	num_worms: 0,
+	current_pace: 1,
+	current_rations: 1,
+	leader_health = "healthy",
+	party1_health = "healthy",
+	party2_health = "healthy",
+	party3_health = "healthy",
+	party4_health = "healthy",
 	miles_traveled: 0,
 	num_wagon_wheels: 0,
 	num_wagon_axles: 0,
@@ -60,6 +67,13 @@ function init(){
 	game_data.num_wagon_axles = 0;
 	game_data.num_wagon_tongues = 0;
 	game_data.miles_traveled = 0;
+	game_data.current_pace = 1;
+	game_data.current_rations = 1;
+	game_data.leader_health = "healthy";
+	game_data.party1_health = "healthy";
+	game_data.party2_health = "healthy";
+	game_data.party3_health = "healthy";
+	game_data.party4_health = "healthy";
 	matt_bill.oxen_amt = 0;
 	matt_bill.food_amt = 0; 
 	matt_bill.clothing_amt = 0;
@@ -1806,6 +1820,15 @@ function drawIndependence(){
 
 function playGame(){
 	clearCanvas();
+	hideTextBoxes();
+	//Draw date/weather/health/food/landmark/miles traveled
+	
+	//Check pace
+	//15mi a day base
+	//18mi a day strenuous
+	//20mi a day grueling
+	
+	//Do food math 1lb base + 1lb per person per day per eating leve
 	
 }
 
