@@ -23,10 +23,11 @@ var game_data = {
 	num_clothing: 0,
 	num_food: 0,
 	num_worms: 0,
-	num_spare_parts: 0,
+	miles_traveled: 0,
+	num_wagon_wheels: 0,
 	num_wagon_axles: 0,
 	num_wagon_tongues: 0,
-	num_wagon_wheels: 0
+	num_party_alive: 5
 	
 }
 
@@ -47,7 +48,7 @@ function init(){
 	game_data.chosen_profession = ""; // can be used for gameplay implications 
 	game_data.leader_name = "";
 	game_data.party_text_selector = 1;
-	game_data.party1 = ""; game_data.party2 = ""; game_data.party3 = ""; game_data.party4 = "";; // ONLY used if all 4 names are entered!
+	game_data.party1 = ""; game_data.party2 = ""; game_data.party3 = ""; game_data.party4 = ""; // ONLY used if all 4 names are entered!
 	game_data.esc_pressed = 0;
 	game_data.current_money = 1600;
 	game_data.current_matt_bill = 0;
@@ -1800,6 +1801,7 @@ function drawIndependence(){
 	img = document.getElementById("Independence_img");
 	canvas = document.getElementById("myCanvas");
 	ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
+	
 }
 
 function playGame(){
