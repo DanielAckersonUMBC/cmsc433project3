@@ -1,4 +1,4 @@
-class Person{ // Person class
+class Person{ // Person class: Contains the name, health status and current health issues
 	constructor(name, health, healthIssue){
 	this.name = name;
 	this.health = health; // Good, Poor, Dead
@@ -6,7 +6,8 @@ class Person{ // Person class
 	}
 }
 
-class Wagon{ // Wagon class
+
+class Wagon{ // Wagon class: Contains the starting type, settler array and item numbers
 	constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels){
 		this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
 		this.settlers = settlers; // Array of Person classes
@@ -19,8 +20,6 @@ class Wagon{ // Wagon class
 		this.axels = axels;
 	}
 }
-
-
 
 function getPixelRGBA(pixelData, x, y, width, height) {
     let i = 4 * (x + y * width);
@@ -240,4 +239,21 @@ $(async () => {
         height: 0.4,
         context: game.context,
     });
+
+    /* Get user input and store for gameplay use
+
+        1. Banker, carpenter, or farmer
+            - determines scoring and starting money
+
+        2. Player name and 4 names for rest of party
+            - We hould use 4 predetermined names for now and worry
+              about custom names later
+
+        3. Start month
+            - March, April, May, June, July
+
+        4. Supplies
+            - oxen, food, clothing, ammo?, spare parts
+    /*
+
 });
