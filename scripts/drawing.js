@@ -1,12 +1,42 @@
 var menu_enum = { MAIN_MENU: 0, HIGH_SCORE: 1, GAME_INFO1: 2, GAME_INFO2: 3, GAME_INFO3: 4, GAME_INFO4: 5,
 GAME_INFO5: 6, GAME_INFO6: 7, GAME_INFO7: 8, EXP_POINTS1: 9, EXP_POINTS2: 10, EXP_POINTS3: 11,
 EXP_PROF: 12, EXP_MONTH: 13, SUPPLY_MSG: 14, MATT_MSG: 15, MATT_WELCOME: 16, MATT_WELCOME2: 17,
-MATT_STOREFRONT: 18, MATT_GOODBYE: 19, INDEPENDENCE: 20 };
+MATT_STOREFRONT: 18, MATT_GOODBYE: 19, TRAIL: 20 };
+
+var trail_enum = { INDEPENDENCE: 0, KANSAS_RIVER: 1, BIG_BLUE_RIVER: 2, FORT_KEARNEY: 3,
+				   CHIMNEY_ROCK: 4, FORT_LARAMIE: 5, INDEPENDENCE_ROCK: 6, SOUTH_PASS: 7,
+				   GREEN_RIVER:8, FORT_BRIDGER: 9, SODA_SPRINGS: 10, FORT_HALL: 11, SNAKE_RIVER: 12,
+				   FORT_BOISE: 13, BLUE_MOUNTAINS: 14, FORT_WALLA_WALLA: 15, DALLES: 16,
+				   COLUMBIA_RIVER: 17, TOLL_ROAD: 18, OREGON_CITY: 19 };
+
 var TOP_TEN = 10;
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
 var MONTHS = ["", "March", "April", "May", "June", "July"];
 var c;
 var ctx;
+
+class Person{ // Person class: Contains the name, health status and current health issues
+    constructor(name, health, healthIssue){
+    this.name = name;
+    this.health = health; // Good, Poor, Dead
+    this.healthIssue = healthIssue; // Specific issue, broken arm etc.
+    }
+}
+
+class Wagon{ // Wagon class: Contains the starting type, settler array and item numbers
+    constructor(startType, settlers, oxenNum, foodLbs, clothesSet, wheels, tongues, axels, money){
+        this.startType = startType; //Banker(1), Carpender(2) or Farmer(3)
+        this.settlers = settlers; // Array of Person classes
+        // Other various items we need
+        this.oxenNum = oxenNum;
+        this.foodLbs = foodLbs;
+        this.clothesSet = clothesSet;
+        this.wheels = wheels;
+        this.tongues = tongues;
+        this.axels = axels;
+        this.money = money;
+    }
+}
 
 var game_data = {
 
@@ -245,6 +275,7 @@ function addListeners(){
 		  }
 		  else if (e.keyCode == 32) {
 
+		  	  game_data.current_money -= matt_bill.total;
 			  drawMattGoodbye();
 
 		  }
@@ -382,7 +413,7 @@ function addListeners(){
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME) { drawMattWelcome2(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME2) { drawMattStorefront(); }
 		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.MATT_GOODBYE){ drawIndependence(); }
-		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.INDEPENDENCE){ playGame(); }
+		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.TRAIL){ playGame(); }
 
 		// Handles the double escape to quit functionality.
 		else if (e.keyCode == 27){
@@ -1804,6 +1835,21 @@ function drawIndependence(){
 
 function playGame(){
 	clearCanvas();
+
+	var player = new Person(game_data.leader_name, "Good", "No issues");
+	var settler2 = new Person(game_data.party2, "Good", "No issues");
+	var settler3 = new Person(game_data.party3, "Good", "No issues");
+	var settler4 = new Person(game_data.party4, "Good", "No issues");
+	var settler5 = new Person(game_data.party5, "Good", "No issues");
+
+	var settlers = [player, settler2, settler3, settler4, settler5]
+
+	var wagon = new Wagon(game_data.chosen_profession, settlers, game_data.num_oxen,
+						  game_data.num_food, game_data.num_clothing, game_data.num_wagon_wheels
+						  game_data.num_wagon_tongues, game_data.num_wagon_axles,
+						  game_data.current_money);
+
+	// draw trail()
 
 }
 
