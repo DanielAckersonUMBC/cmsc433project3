@@ -5,6 +5,10 @@ MATT_STOREFRONT: 18, MATT_GOODBYE: 19, INDEPENDENCE: 20 };
 var TOP_TEN = 10;
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
 var MONTHS = ["", "March", "April", "May", "June", "July"];
+// Array of all locations
+var LOCATIONS = ["Independence", "Kansas River", "Big Blue River", "Fort Kearney", "Chimney Rock", "Fort Laramie", "Independence Rock", "South Pass", "Green River", "Fort Bridger", "Soda Springs", "Fort Hall", "Snake River", "Fort Boise", "Blue Mountains", "Fort Walla Walla", "Dalles", "Oregon City"];
+// Array of distance to next location so at 0 you're at indepenence wiith 102mi to Kansas River, etc.
+var MILESTONE_DIST = [102, 185, 304, 554, 640, 830, 932, 1057, 1151, 1201, 1258, 1440, 1554, 1714, 1769, 1983, 2044];
 var c;
 var ctx;
 
@@ -14,6 +18,8 @@ var game_data = {
 	chosen_profession: "",
 	chosen_month: "",
 	leader_name: "",
+	current_month: "",
+	current_day: 1,
 	party_text_selector: 1,
 	party1: "", party2: "", party3: "", party4: "",
 	esc_pressed: 0,
@@ -25,6 +31,7 @@ var game_data = {
 	num_worms: 0,
 	current_pace: 1,
 	current_rations: 1,
+	current_location: 0,
 	leader_health = "healthy",
 	party1_health = "healthy",
 	party2_health = "healthy",
@@ -1821,14 +1828,27 @@ function drawIndependence(){
 function playGame(){
 	clearCanvas();
 	hideTextBoxes();
-	//Draw date/weather/health/food/landmark/miles traveled
 	
+
 	//Check pace
 	//15mi a day base
 	//18mi a day strenuous
 	//20mi a day grueling
 	
 	//Do food math 1lb base + 1lb per person per day per eating leve
+	
+}
+
+function drawDay(){//Draw date/weather/health/food/landmark/miles traveled
+	clearCanvas();
+
+	ctx.beginPath();
+	ctx.rect(20, 100, 620, 350);
+	ctx.fillStyle = "white";
+	ctx.fill();
+	ctx.font = "16px AppleII";
+	ctx.fillStyle = "Black";
+	ctx.fillText("Date: ",200, 200);
 	
 }
 
@@ -2022,6 +2042,7 @@ function handleMonth(val){
     if (val != 6){
 		
 		game_data.chosen_month = MONTHS[val];
+		game_data.current_month = MONTHS[val];
 		drawSupplyMsg();
 		
 	} else if (val == 6){ drawMonthInfo(); }	  
