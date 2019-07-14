@@ -20,6 +20,7 @@ var game_data = {
 	leader_name: "",
 	current_month: "",
 	current_day: 1,
+	current_location: 0,
 	party_text_selector: 1,
 	party1: "", party2: "", party3: "", party4: "",
 	esc_pressed: 0,
@@ -32,11 +33,12 @@ var game_data = {
 	current_pace: 1,
 	current_rations: 1,
 	current_location: 0,
-	leader_health = "healthy",
-	party1_health = "healthy",
-	party2_health = "healthy",
-	party3_health = "healthy",
-	party4_health = "healthy",
+	leader_health: "healthy",
+	party1_health: "healthy",
+	party2_health: "healthy",
+	party3_health: "healthy",
+	party4_health: "healthy",
+	party_alive: 5,
 	miles_traveled: 0,
 	num_wagon_wheels: 0,
 	num_wagon_axles: 0,
@@ -1816,39 +1818,97 @@ function drawMattGoodbye(){
 }
 
 function drawIndependence(){
-
 	clearCanvas();
 	hideTextBoxes();
 	img = document.getElementById("Independence_img");
 	canvas = document.getElementById("myCanvas");
 	ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, canvas.width, canvas.height);
-	
+	game_data.menu_counter = menu_enum.INDEPENDENCE;
 }
 
 function playGame(){
 	clearCanvas();
 	hideTextBoxes();
-	
+	drawDay();
+	while (game_data.current_location < 18){
+		window.setTimeout(mathDay,100);
+		drawDay();
+	}
+}
 
+function mathDay(){
 	//Check pace
-	//15mi a day base
-	//18mi a day strenuous
-	//20mi a day grueling
+	if (game_data.current_pace == 1){ 	//15mi a day base
+		game_data.miles_traveled = game_data.miles_traveled + 15;
+	}
+	else if (game_data.current_pace == 2){	//18mi a day strenuous
+		game_data.miles_traveled = game_data.miles_traveled + 18;
+	}
+	else{	//20mi a day grueling
+		game_data.miles_traveled = game_data.miles_traveled + 20;
+	}
+	//Do food math 1 lb per person per day per eating level
+	game_data.num_food = game_data.num_food - (game_data.party_alive * game_data.current_rations); 
 	
-	//Do food math 1lb base + 1lb per person per day per eating leve
+	game_data.current_day = game_data.current_day + 1;
+	if(game_data.current_day == 30){
+		switch(game_data.current_month){
+			case "September":
+				game_data.current_month = "October";
+				game_data.current_day == 1;
+				break;
+			case "April":
+				game_data.current_month = "May";
+				game_data.current_day == 1;
+				break;
+			case "June":
+				game_data.current_month = "July";
+				game_data.current_day == 1;
+				break;
+		}
+	}
 	
+	if (game_data.current_day == 31){
+		switch(game_data.current_month){
+			case "May":
+				game_data.current_month = "June";
+				game_data.current_day == 1;
+				break;
+			case "July":
+				game_data.current_month = "August";
+				game_data.current_day == 1;
+				break;
+			case "August":
+				game_data.current_month = "September";
+				game_data.current_day == 1;
+				break;
+			case "March":
+				game_data.current_month = "April";
+				game_data.current_day == 1;
+				break;
+			case "October":
+				game_data.current_month = "November";
+				game_data.current_day == 1;
+				// Display game loss at first Blizzard
+				break;
+		}
+	}
 }
 
 function drawDay(){//Draw date/weather/health/food/landmark/miles traveled
 	clearCanvas();
-
 	ctx.beginPath();
-	ctx.rect(20, 100, 620, 350);
+	ctx.rect(20, 200, 600, 250);
 	ctx.fillStyle = "white";
 	ctx.fill();
-	ctx.font = "16px AppleII";
+	ctx.font = "bolder 18px AppleII";
 	ctx.fillStyle = "Black";
-	ctx.fillText("Date: ",200, 200);
+	ctx.fillText("Date: 	" + game_data.current_month + " " + game_data.current_day + ", 1848",150, 320);
+	ctx.fillText("Weather: Fair", 150,345);
+	ctx.fillText("Health: Good", 150,370);
+	ctx.fillText("Food: " + game_data.num_food ,150,395);
+	ctx.fillText("Next Landmark: " + (MILESTONE_DIST[game_data.current_location] - game_data.miles_traveled),150,420);
+	ctx.fillText("Miles Traveled: " + game_data.miles_traveled,150,445);
 	
 }
 
