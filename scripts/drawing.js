@@ -1861,7 +1861,7 @@ function playGame(){
 	var settlers = [player, settler2, settler3, settler4, settler5]
 
 	var wagon = new Wagon(game_data.chosen_profession, settlers, game_data.num_oxen,
-						  game_data.num_food, game_data.num_clothing, game_data.num_wagon_wheels
+						  game_data.num_food, game_data.num_clothing, game_data.num_wagon_wheels,
 						  game_data.num_wagon_tongues, game_data.num_wagon_axles,
 						  game_data.current_money);
 
