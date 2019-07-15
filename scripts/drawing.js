@@ -6,7 +6,7 @@ FORT_KEARNEY: 23, CHIMNEY_ROCK: 24, FORT_LARAMIE: 25, INDEPENDENCE_ROCK: 26, SOU
 GREEN_RIVER: 28, FORT_BRIDGER: 29, SODA_SPRINGS: 30, FORT_HALL: 31, SNAKE_RIVER: 32, FORT_BOISE: 33,
 BLUE_MOUNTAINS: 34, FORT_WALLA_WALLA: 35, DALLES: 36, COLUMBIA_RIVER: 37, TOLL_ROAD:38, OREGON_CITY: 39,
 REVIEW_SUPPLIES: 40, REVIEW_SUPPLIES_STORE: 41, CHECK_MAP: 42, CHANGE_PACE: 43, CHANGE_RATIONS: 44,
-ATTEMPT_TRADE: 45, FISHING: 46, OUT_OF_BAIT: 47 }; 
+ATTEMPT_TRADE: 45, FISHING: 46, OUT_OF_BAIT: 47, ON_TRAIL: 48 }; 
 var weather = [ "cool", "warm", "fair", "raining", "snowing" ];
 var TOP_TEN = 10;
 var DEFAULT_PARTY_NAMES = ["Beth","Sarah","Jed","Joey"]; // used otherwise.
@@ -110,7 +110,7 @@ function init(){
 	game_data.current_month = "";
 	game_data.current_day = 1;
 	game_data.current_year = 1848;
-	game_data.current_health = "";
+	game_data.current_health = "good";
 	game_data.current_location = "";
 	game_data.current_rations = "filling";
 	game_data.current_pace = "steady";
@@ -537,10 +537,14 @@ function addListeners(){
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME) { drawMattWelcome2(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.MATT_WELCOME2) { drawMattStorefront(); }
 		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.MATT_GOODBYE){ drawIndependence(); }
-		else if (e.keyCode == 13 && game_data.menu_counter == menu_enum.INDEPENDENCE){ playGame(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.INDEPENDENCE){ playGame(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.REVIEW_SUPPLIES && 
 		    game_data.at_general_store == 1){ drawSizeUpStore(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.REVIEW_SUPPLIES && 
+		    game_data.at_general_store == 0){ drawSizeUpMenu(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.CHECK_MAP && 
+		    game_data.at_general_store == 1){ drawSizeUpStore(); }
+		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.CHECK_MAP && 
 		    game_data.at_general_store == 0){ drawSizeUpMenu(); }
 		else if (e.keyCode == 32 && game_data.menu_counter == menu_enum.FISHING && game_data.at_general_store == 1
 		         && Number(game_data.num_worms) == 0){ drawSizeUpStore(); }
@@ -550,6 +554,7 @@ function addListeners(){
 		else if(e.keyCode == 32 && game_data.menu_counter == menu_enum.OUT_OF_BAIT && game_data.at_general_store == 0){	drawSizeUpMenu(); }
 		else if(e.keyCode == 32 && game_data.menu_counter == menu_enum.FISH_SUCCESS && game_data.at_general_store == 1){ drawSizeUpStore(); }
 		else if(e.keyCode == 32 && game_data.menu_counter == menu_enum.FISH_SUCCESS && game_data.at_general_store == 0){ drawSizeUpMenu(); }
+		else if(e.keyCode == 13 && game_data.menu_counter == menu_enum.ON_TRAIL){ drawSizeUpMenu(); }
 		
 		// Handles the double escape to quit functionality.
 		else if (e.keyCode == 27){
@@ -2439,6 +2444,7 @@ function handleFish(val){
 function playGame(){
 	clearCanvas();
 
+    game_data.menu_counter = menu_enum.ON_TRAIL;
 	var player = new Person(game_data.leader_name, game_data.leader_health, "No issues");
 	var settler2 = new Person(game_data.party2, game_data.party1_health, "No issues");
 	var settler3 = new Person(game_data.party3, game_data.party2_health, "No issues");
@@ -2455,10 +2461,10 @@ function playGame(){
 	hideTextBoxes();
 	drawDay();
 
-	while (game_data.current_location < 18){
+	/*while (game_data.current_location < 18){
 		window.setTimeout(mathDay,100);
 		drawDay();
-	}
+	}*/
 }
 
 function mathDay(){
